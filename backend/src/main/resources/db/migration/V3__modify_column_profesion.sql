@@ -1,0 +1,9 @@
+ALTER TABLE profesionales MODIFY COLUMN profesion ENUM(
+    'MAYORISTA',
+    'FARMACIA',
+    'COSMETOLOGIA',
+    'COSMIATRIA',
+    'DERMOCOSMIATRIA',
+    'ESTETICISTA',
+    'MASAJISTA'
+) NOT NULL;

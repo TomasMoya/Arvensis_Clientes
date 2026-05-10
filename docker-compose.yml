@@ -1,0 +1,49 @@
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: arvensis-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - .env
+
+  backend:
+    build: ./backend
+    container_name: arvensis-backend
+    restart: always
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+    env_file:
+      - .env
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    container_name: arvensis-frontend
+    restart: always
+    ports:
+      - "80:80"
+    env_file:
+      - .env
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
