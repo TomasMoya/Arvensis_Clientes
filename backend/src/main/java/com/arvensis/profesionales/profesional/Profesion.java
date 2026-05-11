@@ -7,6 +7,7 @@ public enum Profesion {
     COSMIATRIA,
     DERMOCOSMIATRIA,
     ESTETICISTA,
+    KINESIOLOGIA,
     MASAJISTA,
     CONSUMIDOR_FINAL
 }

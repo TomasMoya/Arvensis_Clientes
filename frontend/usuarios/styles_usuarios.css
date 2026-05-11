@@ -1,32 +1,33 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #F7F6F3;
-  --surface: #FFFFFF;
-  --surface2: #F2F1EE;
-  --border: #E4E2DC;
-  --border2: #CCCAC2;
-  --text: #1A1916;
-  --text-2: #6B6860;
-  --text-3: #9E9C96;
-  --accent: #2D5BE3;
-  --accent-bg: #EEF2FD;
-  --accent-text: #1A3FA0;
-  --green: #1E7C52;
-  --green-bg: #E8F5EF;
-  --green-border: #A8D5BC;
-  --red: #B53B3B;
-  --red-bg: #FAEAEA;
-  --red-border: #E8AAAA;
-  --amber: #8A5C00;
-  --amber-bg: #FEF6E4;
+  --bg: #0F0F0D;
+  --surface: #1A1916;
+  --surface2: #222220;
+  --border: #2E2D2A;
+  --border2: #3D3C38;
+  --text: #F0EFE9;
+  --text-2: #9E9C96;
+  --text-3: #6B6860;
+  --accent: #4E7BF5;
+  --accent-bg: #1A2340;
+  --accent-text: #8AABFF;
+  --green: #3DB87A;
+  --green-bg: #0D2B1A;
+  --green-border: #1E5C3A;
+  --red: #E05555;
+  --red-bg: #2B0D0D;
+  --red-border: #5C1E1E;
+  --amber: #E0A830;
+  --amber-bg: #2B1F0D;
+  --amber-border: #5C3F1E;
   --radius: 10px;
   --radius-lg: 14px;
   --radius-xl: 20px;
   --mono: 'DM Mono', monospace;
   --sans: 'DM Sans', sans-serif;
-  --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
 }
 
 body {
