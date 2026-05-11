@@ -1,4 +1,4 @@
-const API_BASE = '/api';
+const API_BASE = 'https://arvensis-cli.onrender.com';
 
 // ── REDIRECT SI YA ESTÁ LOGUEADO ──
 if (localStorage.getItem('tokenJWT')) {

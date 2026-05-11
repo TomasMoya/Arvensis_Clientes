@@ -17,7 +17,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/profesionales")
-@CrossOrigin(origins = "*")
 public class ProfesionalController {
 
     @Autowired

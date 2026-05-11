@@ -1,4 +1,4 @@
-const API = '/api';
+const API = 'https://arvensis-cli.onrender.com';
 
 // ── VERIFICAR AUTH Y ROL ──
 if (!localStorage.getItem('tokenJWT')) {

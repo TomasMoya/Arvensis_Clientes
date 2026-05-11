@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/profesionales/{id}/trazabilidad")
-@CrossOrigin(origins = "*")
 public class TrazabilidadController {
 
     @Autowired
