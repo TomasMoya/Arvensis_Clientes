@@ -31,7 +31,7 @@ if (localStorage.getItem('rol') === 'ADMIN') {
   if (navUsuarios) navUsuarios.style.display = 'flex';
 }
 
-const API = 'https://arvensis-cli.onrender.com/profesionales';
+const API = 'https://arvensis-clientes.onrender.com/profesionales';
 
 const PASOS = [
   { key: 'trafico',         label: 'De dónde se conoció', fechaKey: null,              notaKey: null, isSelect: true},
