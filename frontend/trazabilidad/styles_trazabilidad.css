@@ -167,11 +167,11 @@
       font-family: var(--mono);
     }
 
-    .av-blue   { background: #DCE8FB; color: #1A3FA0; }
-    .av-teal   { background: #D4EDE4; color: #0D5C3B; }
-    .av-amber  { background: #FEF0CB; color: #7A5000; }
-    .av-rose   { background: #FBDFE5; color: #8C1B35; }
-    .av-purple { background: #E8E4FC; color: #3D2F9E; }
+    .av-blue   { background: #744509; color: #1A3FA0; }
+    .av-teal   { background: #744509; color: #0D5C3B; }
+    .av-amber  { background: #744509; color: #7A5000; }
+    .av-rose   { background: #744509; color: #8C1B35; }
+    .av-purple { background: #744509; color: #3D2F9E; }
 
     .prof-info { flex: 1; }
     .prof-name { font-size: 17px; font-weight: 500; letter-spacing: -0.02em; }
