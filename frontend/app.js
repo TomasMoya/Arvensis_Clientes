@@ -323,7 +323,7 @@ document.addEventListener('keydown', e => {
 });
 
 // ── SIN COMPRA ──
-  authFetch('http://localhost:8080/profesionales/sin-compra')
+  authFetch(`${API}/sin-compra`)
   .then(res => res.json())
   .then(data => {
     if (Array.isArray(data) && data.length > 0) {
