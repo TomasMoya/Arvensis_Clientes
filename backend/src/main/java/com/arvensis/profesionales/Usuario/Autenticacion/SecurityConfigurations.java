@@ -31,26 +31,24 @@ public class SecurityConfigurations {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.POST, "/login").permitAll();
                     req.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                    req.requestMatchers("/usuarios").hasRole("ADMIN");
-                    req.requestMatchers("/usuarios/**").hasRole("ADMIN");
                     req.anyRequest().authenticated();
                 })
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-                .csrf(csrf -> csrf.disable())
                 .build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept", "Origin"));
         config.setAllowedOrigins(List.of("https://arvensis-cli.onrender.com"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(false);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
