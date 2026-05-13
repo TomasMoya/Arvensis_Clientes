@@ -14,4 +14,6 @@ public interface ProfesionalRepository extends JpaRepository<Profesional, Long> 
 
     @Query ("SELECT p FROM Profesional p WHERE p.estado = 'DESHABILITADO'")
     Page<Profesional> findByEstadoDeshabilitado(Pageable pageable);
+
+    boolean existsByEmail(String email);
 }

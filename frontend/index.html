@@ -46,7 +46,6 @@
         <span class="status-dot offline" id="dot"></span>
         <span id="conn-label">Conectando...</span>
       </div>
-      <div style="margin-top:4px; color: var(--text-3)">localhost:8080</div>
     </div>
   </aside>
 
@@ -62,6 +61,11 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
           Actualizar
         </button>
+        <label class="btn" for="import-excel">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Importar Excel
+        </label>
+        <input type="file" id="import-excel" accept=".xlsx" style="display:none" onchange="importarExcel(this)" />
         <button class="btn btn-primary" onclick="openModal()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Nuevo cliente
@@ -212,6 +216,25 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
   </span>
   <span id="toast-msg"></span>
+</div>
+
+<!-- ─── MODAL DUPLICADOS ─── -->
+<div class="modal-overlay" id="modal-duplicados" onclick="if(event.target===this)closeModal('modal-duplicados')">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Emails duplicados encontrados</div>
+        <div class="modal-sub">Los siguientes emails ya están registrados.</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-duplicados')">×</button>
+    </div>
+    <div id="lista-duplicados" style="margin-bottom:16px;font-size:13px;font-family:var(--mono);color:var(--text-2);max-height:200px;overflow-y:auto;"></div>
+    <div style="font-size:13px;color:var(--text-2);margin-bottom:8px;">¿Querés importar todos los registros igualmente?</div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-duplicados')">Cancelar</button>
+      <button class="btn btn-primary" onclick="confirmarImportacion()">Importar igual</button>
+    </div>
+  </div>
 </div>
 
 <script src="app.js"></script>

@@ -20,6 +20,7 @@ public class Profesional {
     private String email;
     private String telefono;
     @Enumerated (EnumType.STRING)
+    @Column (nullable = true)
     private Profesion profesion;
     private String direccion;
     @Enumerated (EnumType.STRING)

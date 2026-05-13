@@ -25,7 +25,7 @@ function authFetch(url, options = {}) {
   });
 }
 
-const API = 'https://arvensis-clientes.onrender.com/profesionales';
+const API = 'https://arvensis-clientes.onrender.com';
 let allData = [], filtered = [], sortField = '', sortDir = 1;
 let desData = [], desFiltered = [], desSortField = '', desSortDir = 1;
 let currentPage = 0, pageSize = 10, totalPages = 1, totalElements = 0;
@@ -346,6 +346,68 @@ document.addEventListener('keydown', e => {
     loadProfesionales(currentPage);
   } catch (e) {
     showToast('Error: ' + e.message, 'error');
+  }
+}
+
+// ── IMPORTAR EXCEL ──
+let pendingImportData = null;
+
+async function importarExcel(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  // Resetear el input para poder subir el mismo archivo de nuevo
+  input.value = '';
+
+  try {
+    const res = await fetch(`${API}/importar`, {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('tokenJWT') },
+      body: formData
+    });
+
+    const data = await res.json();
+
+    if (res.status === 409) {
+      // Hay duplicados — mostrar modal de confirmación
+      pendingImportData = data.registros;
+      const lista = document.getElementById('lista-duplicados');
+      lista.innerHTML = data.duplicados.map(e => `<div style="padding:4px 0;border-bottom:1px solid var(--border)">${e}</div>`).join('');
+      document.getElementById('modal-duplicados').classList.add('open');
+      return;
+    }
+
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+
+    showToast(`${data.importados} profesionales importados`, 'success');
+    loadProfesionales(0);
+
+  } catch (e) {
+    showToast('Error al importar: ' + e.message, 'error');
+  }
+}
+
+async function confirmarImportacion() {
+  closeModal('modal-duplicados');
+  if (!pendingImportData) return;
+
+  try {
+    const res = await authFetch(`${API}/importar/confirmar`, {
+      method: 'POST',
+      body: JSON.stringify(pendingImportData)
+    });
+
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    showToast(`${data.importados} profesionales importados`, 'success');
+    loadProfesionales(0);
+  } catch (e) {
+    showToast('Error al confirmar: ' + e.message, 'error');
+  } finally {
+    pendingImportData = null;
   }
 }
 
