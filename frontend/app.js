@@ -25,7 +25,7 @@ function authFetch(url, options = {}) {
   });
 }
 
-const API = 'https://arvensis-clientes.onrender.com';
+const API = 'https://arvensis-clientes.onrender.com/profesionales';
 let allData = [], filtered = [], sortField = '', sortDir = 1;
 let desData = [], desFiltered = [], desSortField = '', desSortDir = 1;
 let currentPage = 0, pageSize = 10, totalPages = 1, totalElements = 0;
