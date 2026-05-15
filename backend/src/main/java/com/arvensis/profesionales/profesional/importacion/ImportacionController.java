@@ -20,7 +20,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/profesionales/importar")
-@CrossOrigin(origins = "*")
 public class ImportacionController {
 
     @Autowired
