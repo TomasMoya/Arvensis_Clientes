@@ -156,6 +156,10 @@ function renderTable() {
 
   tbody.innerHTML = filtered.map(p => {
     const avc = avatarColor(p.nombre + p.apellido);
+    const btnEditar = `<button class="btn btn-sm" onclick="abrirModalEditar(${p.id})">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      Editar
+    </button>`;
     const btnMapa = p.direccion
       ? `<a class="btn btn-ver-mapa" href="https://www.google.com/maps/search/${encodeURIComponent(p.direccion)}" target="_blank" rel="noopener noreferrer">Ver Mapa</a>`
       : '';
@@ -187,7 +191,7 @@ function renderTable() {
           <option value="PAO"   ${(p.personalAsignado ?? '') === 'PAO'   ? 'selected' : ''}>Pao</option>
         </select>
       </td>
-      <td><div class="actions">${btnMapa}</div></td>
+      <td><div class="actions">${btnMapa}${btnEditar}</div></td>
     </tr>`;
   }).join('');
 
@@ -408,6 +412,64 @@ async function confirmarImportacion() {
     showToast('Error al confirmar: ' + e.message, 'error');
   } finally {
     pendingImportData = null;
+  }
+}
+
+// ── EDITAR PROFESIONAL ──
+let editandoId = null;
+
+async function abrirModalEditar(id) {
+  editandoId = id;
+  const profesional = allData.find(p => p.id === id);
+  if (!profesional) return;
+
+  // Precargar profesiones
+  const res = await authFetch(`${API}/profesiones`);
+  const profesiones = await res.json();
+  const selProf = document.getElementById('e-profesion');
+  selProf.innerHTML = '<option value="">Sin profesión</option>' +
+    profesiones.map(p => `<option value="${p}" ${p === profesional.profesion ? 'selected' : ''}>${esc(p.replace('_', ' '))}</option>`).join('');
+
+  // Precargar campos
+  document.getElementById('e-nombre').value    = profesional.nombre ?? '';
+  document.getElementById('e-apellido').value  = profesional.apellido ?? '';
+  document.getElementById('e-email').value     = profesional.email ?? '';
+  document.getElementById('e-telefono').value  = profesional.telefono ?? '';
+  document.getElementById('e-direccion').value = profesional.direccion ?? '';
+
+  document.getElementById('form-error-editar').style.display = 'none';
+  document.getElementById('modal-editar').classList.add('open');
+}
+
+async function submitEditar() {
+  const nombre   = document.getElementById('e-nombre').value.trim();
+  const apellido = document.getElementById('e-apellido').value.trim();
+
+  if (!nombre || !apellido) {
+    document.getElementById('form-error-editar').style.display = 'block';
+    return;
+  }
+
+  const data = {
+    nombre,
+    apellido,
+    email:     document.getElementById('e-email').value.trim() || null,
+    telefono:  document.getElementById('e-telefono').value.trim() || null,
+    direccion: document.getElementById('e-direccion').value.trim() || null,
+    profesion: document.getElementById('e-profesion').value || null
+  };
+
+  try {
+    const res = await authFetch(`${API}/${editandoId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    closeModal('modal-editar');
+    showToast('Profesional actualizado', 'success');
+    loadProfesionales(currentPage);
+  } catch (e) {
+    showToast('Error al actualizar: ' + e.message, 'error');
   }
 }
 

@@ -45,4 +45,25 @@ public class Profesional {
     public void deshabilitarProfesional() {
         this.estado = Estado.DESHABILITADO;
     }
+
+    public void actualizarProfesional(DatosProfesionalDTO datos){
+        if (datos.nombre() != null){
+            this.nombre = datos.nombre();
+        }
+        if (datos.apellido() != null){
+            this.apellido = datos.apellido();
+        }
+        if (datos.email() != null){
+            this.email = datos.email();
+        }
+        if (datos.telefono() != null){
+            this.telefono = datos.telefono();
+        }
+        if (datos.profesion() != null){
+            this.profesion = datos.profesion();
+        }
+        if (datos.direccion() != null){
+            this.direccion = datos.direccion();
+        }
+    }
 }

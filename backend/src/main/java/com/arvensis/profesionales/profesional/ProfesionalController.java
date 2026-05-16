@@ -96,4 +96,14 @@ public class ProfesionalController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @Transactional
+    @PutMapping("/{id}")
+    public ResponseEntity actualizarProfesional(@PathVariable Long id, @RequestBody DatosProfesionalDTO datos){
+        Profesional profesional = profesionalRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró el registro con el id especificado"));
+
+        profesional.actualizarProfesional(datos);
+        return ResponseEntity.ok("El usuario se actualizó correctamente");
+    }
 }
