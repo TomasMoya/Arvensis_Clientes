@@ -31,7 +31,7 @@ if (localStorage.getItem('rol') === 'ADMIN') {
   if (navUsuarios) navUsuarios.style.display = 'flex';
 }
 
-const API = 'https://arvensis-clientes.onrender.com/profesionales';
+const API = '/api/profesionales';
 
 const AVATAR_COLORS = ['av-blue', 'av-teal', 'av-amber', 'av-rose', 'av-purple'];
 
