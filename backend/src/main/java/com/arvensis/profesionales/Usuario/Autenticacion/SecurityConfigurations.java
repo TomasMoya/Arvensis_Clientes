@@ -47,7 +47,7 @@ public class SecurityConfigurations {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept", "Origin"));
-        config.setAllowedOrigins(List.of("https://arvensis-cli.onrender.com"));
+        config.setAllowedOrigins(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowCredentials(false);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
