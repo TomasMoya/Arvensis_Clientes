@@ -35,16 +35,16 @@ services:
         condition: service_healthy
 
   frontend:
-  build: ./frontend
-  container_name: arvensis-frontend
-  restart: always
-  ports:
-    - "80:80"
-    - "443:443"
-  volumes:
-    - /root/ssl:/etc/ssl/arvensis
-  depends_on:
-    - backend
+    build: ./frontend
+    container_name: arvensis-frontend
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /root/ssl:/etc/ssl/arvensis
+    depends_on:
+      - backend
 
 volumes:
   mysql_data:
