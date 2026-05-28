@@ -1,5 +1,6 @@
 package com.arvensis.profesionales.Usuario;
 
+import com.arvensis.profesionales.Usuario.Tareas.Tarea;
 import jakarta.persistence.*;
 import lombok.*;
 import org.jspecify.annotations.Nullable;
@@ -7,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,6 +28,8 @@ public class Usuario implements UserDetails {
     private String clave;
     @Enumerated(EnumType.STRING)
     private Rol rol;
+    @OneToMany (mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Tarea> tareas = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

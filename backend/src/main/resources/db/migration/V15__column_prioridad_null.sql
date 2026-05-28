@@ -1,0 +1,2 @@
+ALTER TABLE tareas
+MODIFY COLUMN prioridad ENUM('BAJA', 'MEDIA', 'ALTA') NULL

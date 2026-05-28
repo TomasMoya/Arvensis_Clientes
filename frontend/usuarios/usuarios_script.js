@@ -1,4 +1,8 @@
-const API = '/api';
+//const API = '/api';
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+// Si es local, apunta al puerto real de tu backend (ej. 8080). Si es producción, usa '/api'
+const API = isLocalhost ? 'http://127.0.0.1:8080' : '/api';
 
 // ── VERIFICAR AUTH Y ROL ──
 if (!localStorage.getItem('tokenJWT')) {
@@ -111,7 +115,11 @@ function renderTabla(lista) {
         <div class="actions">
           ${esMismo
             ? ''
-            : `<button class="btn btn-sm btn-danger" onclick="pedirEliminar(${u.id}, '${esc(u.nombre)}')">Eliminar</button>`
+            : `<button class="btn btn-sm btn-danger" onclick="pedirEliminar(${u.id}, '${esc(u.nombre)}')">Eliminar</button>
+            <a class="btn btn-sm" href="../tareas/tareas.html?id=${u.id}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Tareas
+            </a>`
           }
         </div>
       </td>

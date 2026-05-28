@@ -25,7 +25,29 @@ function authFetch(url, options = {}) {
   });
 }
 
-const API = '/api/profesionales';
+//const API = '/api/profesionales';
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+// Si es local, apunta al puerto real de tu backend (ej. 8080). Si es producción, usa '/api'
+const API = isLocalhost ? 'http://127.0.0.1:8080/profesionales' : '/api/profesionales';
+const API_BASE = isLocalhost ? 'http://127.0.0.1:8080' : '/api';
+
+// Mostrar link de tareas con el id del usuario logueado
+try {
+  const payload = JSON.parse(atob(localStorage.getItem('tokenJWT').split('.')[1]));
+  authFetch(`${API_BASE}/usuarios/me`)
+    .then(res => res.json())
+    .then(yo => {
+      const navTareas = document.getElementById('nav-tareas');
+      if (navTareas && yo.id) {
+        navTareas.href = `../tareas/tareas.html?id=${yo.id}`;
+        navTareas.style.display = 'flex';
+      }
+    })
+    .catch(() => {});
+} catch(e) {}
+
+
 let allData = [], filtered = [], sortField = '', sortDir = 1;
 let desData = [], desFiltered = [], desSortField = '', desSortDir = 1;
 let currentPage = 0, pageSize = 10, totalPages = 1, totalElements = 0;

@@ -1,5 +1,6 @@
 package com.arvensis.profesionales.Usuario.Autenticacion;
 
+import com.arvensis.profesionales.Usuario.Usuario;
 import com.arvensis.profesionales.Usuario.UsuarioRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

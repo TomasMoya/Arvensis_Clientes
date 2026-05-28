@@ -5,6 +5,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +27,11 @@ public class UsuarioController {
         if (usuarioRepository.findByLogin(datosRegistroUsuarios.login()) != null) {
             return ResponseEntity.badRequest().body("El usuario ya existe");
         }
-        Usuario usuario = new Usuario(
-                null,
-                datosRegistroUsuarios.nombre(),
-                datosRegistroUsuarios.login(),
-                passwordEncoder.encode(datosRegistroUsuarios.clave()),
-                datosRegistroUsuarios.rol() != null ? datosRegistroUsuarios.rol() : Rol.USER
-        );
+        Usuario usuario = new Usuario();
+        usuario.setNombre(datosRegistroUsuarios.nombre());
+        usuario.setLogin(datosRegistroUsuarios.login());
+        usuario.setClave(passwordEncoder.encode(datosRegistroUsuarios.clave()));
+        usuario.setRol(datosRegistroUsuarios.rol() != null ? datosRegistroUsuarios.rol() : Rol.USER);
         usuarioRepository.save(usuario);
         return ResponseEntity.status(201).build();
     }
@@ -62,5 +62,16 @@ public class UsuarioController {
         usuario.setRol(datos.rol());
         usuarioRepository.save(usuario);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity me(Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Usuario usuario = usuarioRepository.findById(
+                ((Usuario) userDetails).getId()
+        ).orElseThrow();
+        return ResponseEntity.ok(new RetornoUsuarioDTO(
+                usuario.getId(), usuario.getNombre(), usuario.getLogin(), usuario.getRol()
+        ));
     }
 }
