@@ -26,7 +26,7 @@ public class TareaController {
     public ResponseEntity listar(@PathVariable Long usuarioId){
         List<Tarea> tareas = tareaRepository.findByUsuarioId(usuarioId);
         return ResponseEntity.ok(tareas.stream().map(t -> new RetornoTareaDTO(t.getId(), t.getTitulo(), t.getDescripcion(),
-        t.getFechaLimite(), t.getPrioridad(), t.getEstado())));
+        t.getFechaLimite(), t.getPrioridad(), t.getEstado(), t.getTipo())));
     }
 
     @Transactional
@@ -54,7 +54,7 @@ public class TareaController {
         tarea.actualizarDatos(datos);
 
         return ResponseEntity.ok(new RetornoTareaDTO(tarea.getId(), tarea.getTitulo(), tarea.getDescripcion(), tarea.getFechaLimite(),
-                tarea.getPrioridad(), tarea.getEstado()));
+                tarea.getPrioridad(), tarea.getEstado(), tarea.getTipo()));
     }
 
     @Transactional

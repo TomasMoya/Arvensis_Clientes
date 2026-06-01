@@ -25,6 +25,8 @@ public class Tarea {
     private Prioridad prioridad;
     @Enumerated (EnumType.STRING)
     private EstadoTarea estado;
+    @Enumerated(EnumType.STRING)
+    private TipoTarea tipo;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn (name = "usuario_id")
     @JsonIgnore
@@ -36,5 +38,6 @@ public class Tarea {
         if (datos.fechaLimite() != null)      this.fechaLimite = datos.fechaLimite();
         if (datos.prioridad() != null)          this.prioridad = datos.prioridad();
         if (datos.estado() != null) this.estado = datos.estado();
+        if (datos.tipo() != null) this.tipo = datos.tipo();
     }
 }

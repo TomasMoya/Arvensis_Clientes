@@ -66,6 +66,31 @@
     </header>
 
     <main class="content">
+      <div class="objetivos-section" id="objetivos-section">
+        <div class="objetivos-group" id="group-trimestral">
+          <div class="objetivos-header">
+            <span class="obj-dot dot-trimestral"></span>
+            <span class="obj-label">Objetivos trimestrales</span>
+            <span class="obj-count" id="count-trimestral">0</span>
+          </div>
+          <div class="objetivos-list" id="list-OBJETIVO_TRIMESTRAL"></div>
+        </div>
+        <div class="objetivos-group" id="group-mensual">
+          <div class="objetivos-header">
+            <span class="obj-dot dot-mensual"></span>
+            <span class="obj-label">Objetivos mensuales</span>
+            <span class="obj-count" id="count-mensual">0</span>
+          </div>
+          <div class="objetivos-list" id="list-OBJETIVO_MENSUAL"></div>
+        </div>
+        <div class="objetivos-group" id="group-anual">
+          <div class="objetivos-header">
+            <span class="obj-dot dot-anual"></span>
+            <span class="obj-label">Objetivos anuales</span>
+            <span class="obj-count" id="count-anual">0</span>
+          </div>
+          <div class="objetivos-list" id="list-OBJETIVO_ANUAL"></div>
+      </div>
       <div class="board" id="board">
         <div class="column" ondragover="onDragOver(event)" ondrop="onDrop(event, 'PENDIENTE')">
           <div class="column-header">
@@ -126,6 +151,15 @@
           <option value="BAJA">Baja</option>
           <option value="MEDIA">Media</option>
           <option value="ALTA">Alta</option>
+        </select>
+      </div>
+      <div class="form-row full">
+        <label class="form-label">Tipo</label>
+        <select id="f-tipo">
+          <option value="TAREA">Tarea</option>
+          <option value="OBJETIVO_MENSUAL">Objetivo Mensual</option>
+          <option value="OBJETIVO_TRIMESTRAL">Objetivo Trimestral</option>
+          <option value="OBJETIVO_ANUAL">Objetivo Anual</option>
         </select>
       </div>
     </div>

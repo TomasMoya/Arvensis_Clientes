@@ -10,6 +10,7 @@ public record DatosCrearTareaDTO(
         String descripcion,
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         LocalDateTime fechaLimite,
-        Prioridad prioridad
+        Prioridad prioridad,
+        TipoTarea tipo
 ) {
 }

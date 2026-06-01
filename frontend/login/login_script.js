@@ -1,4 +1,8 @@
-const API_BASE = '/api';
+//const API_BASE = '/api';
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+// Si es local, apunta al puerto real de tu backend (ej. 8080). Si es producción, usa '/api'
+const API_BASE = isLocalhost ? 'http://127.0.0.1:8080' : '/api';
 
 // ── REDIRECT SI YA ESTÁ LOGUEADO ──
 if (localStorage.getItem('tokenJWT')) {

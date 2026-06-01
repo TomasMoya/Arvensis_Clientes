@@ -10,6 +10,7 @@ public record DatosActualizarTareaDTO(
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         LocalDateTime fechaLimite,
         Prioridad prioridad,
-        EstadoTarea estado
+        EstadoTarea estado,
+        TipoTarea tipo
 ) {
 }
