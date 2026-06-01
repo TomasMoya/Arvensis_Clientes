@@ -40,6 +40,7 @@ public class TareaController {
         tarea.setFechaLimite(datos.fechaLimite());
         tarea.setEstado(EstadoTarea.PENDIENTE);
         tarea.setPrioridad(datos.prioridad());
+        tarea.setTipo(datos.tipo());
         tarea.setUsuario(usuario);
 
         tareaRepository.save(tarea);
