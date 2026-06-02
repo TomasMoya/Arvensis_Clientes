@@ -522,6 +522,8 @@ tr:hover td { background: #959e87; }
   .sidebar-overlay.show { display: block; }
   .content { padding: 16px; }
   .topbar { padding: 12px 16px; }
+  #import-excel { display: none; }
+  #import-excel-label { display: none; }
 }
 
 .hamburger {
