@@ -7,7 +7,7 @@ function authFetch(url, options = {}) {
   const token = localStorage.getItem('tokenJWT');
   if (!token) {
     window.location.href = '../login/login.html';
-    return;
+    return Promise.reject('No token');;
   }
   return fetch(url, {
     ...options,
@@ -17,9 +17,10 @@ function authFetch(url, options = {}) {
       ...(options.headers || {})
     }
   }).then(res => {
-    if (res.status === 401) {
+    if (res.status === 401 || res.status === 403) {
       localStorage.removeItem('tokenJWT');
       window.location.href = '../login/login.html';
+      throw new Error("Sesión expirada");
     }
     return res;
   });
