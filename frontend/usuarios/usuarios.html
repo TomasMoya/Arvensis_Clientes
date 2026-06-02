@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="styles_usuarios.css" />
 </head>
 <body>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
 <div class="layout">
 
   <!-- SIDEBAR -->
@@ -45,6 +47,13 @@
   <div class="main">
     <header class="topbar">
       <div class="topbar-left">
+        <button class="hamburger" onclick="toggleSidebar()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
         <div class="page-title">Gestión de usuarios</div>
         <div class="page-sub" id="page-sub">Cargando...</div>
       </div>

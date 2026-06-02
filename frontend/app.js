@@ -496,5 +496,16 @@ async function submitEditar() {
   }
 }
 
+// ── SIDEBAR ──
+function toggleSidebar() {
+  document.querySelector('.sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('show');
+}
+
+function closeSidebar() {
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+}
+
 // ── INIT ──
 loadProfesionales();
