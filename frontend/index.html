@@ -156,6 +156,10 @@
         <button class="pag-btn" id="btn-prev" onclick="changePage(-1)" disabled>‹</button>
         <div id="page-btns" style="display:flex;gap:4px;"></div>
         <button class="pag-btn" id="btn-next" onclick="changePage(1)" disabled>›</button>
+        <div id="goto-container" class="goto-container">
+          <span>Ir a:</span>
+          <input type="number" id="inp-goto" min="1" onkeydown="if(event.key === 'Enter') saltarAPagina(this.value)" onblur="saltarAPagina(this.value)">
+        </div>
       </div>
 
     </main>

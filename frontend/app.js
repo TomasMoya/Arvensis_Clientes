@@ -240,11 +240,37 @@ function renderPagination() {
     b.onclick = () => loadProfesionales(i);
     container.appendChild(b);
   }
+
+  const gotoContainer = document.getElementById('goto-container');
+  const inpGoto = document.getElementById('inp-goto');
+  
+  if (gotoContainer && inpGoto) {
+    if (totalPages <= 1) {
+      gotoContainer.style.display = 'none';
+    } else {
+      gotoContainer.style.display = 'flex';
+      inpGoto.value = currentPage + 1;
+      inpGoto.max = totalPages;
+    }
+  }
 }
 
 function changePage(dir) {
   const np = currentPage + dir;
   if (np >= 0 && np < totalPages) loadProfesionales(np);
+}
+
+function saltarAPagina(valor) {
+  const pagina = parseInt(valor, 10);
+
+  if (!isNaN(pagina) && pagina >= 1 && pagina <= totalPages) {
+    
+    if (pagina - 1 !== currentPage) {
+      loadProfesionales(pagina - 1);
+    }
+  } else {
+    document.getElementById('inp-goto').value = currentPage + 1;
+  }
 }
 
 // ── MODAL AGREGAR ──
