@@ -38,15 +38,27 @@ const API_BASE = isLocalhost ? 'http://127.0.0.1:8080' : '/api';
 try {
   const payload = JSON.parse(atob(localStorage.getItem('tokenJWT').split('.')[1]));
   authFetch(`${API_BASE}/usuarios/me`)
-    .then(res => res.json())
-    .then(yo => {
-      const navTareas = document.getElementById('nav-tareas');
-      if (navTareas && yo.id) {
-        navTareas.href = `../tareas/tareas.html?id=${yo.id}`;
-        navTareas.style.display = 'flex';
-      }
-    })
-    .catch(() => {});
+  .then(res => res.json())
+  .then(yo => {
+    const navMisTareas = document.getElementById('nav-mis-tareas');
+    if (navMisTareas && yo.id) {
+      navMisTareas.href = `../tareas/tareas.html?id=${yo.id}`;
+    }
+    // Cargar grupos
+    return authFetch(`${API_BASE}/grupos/mis-grupos`)
+      .then(res => res.json())
+      .then(grupos => {
+        const container = document.getElementById('nav-grupos');
+        if (grupos.length > 0) {
+          container.innerHTML = grupos.map(g => `
+            <a class="nav-subitem" href="../tareas/grupo.html?id=${g.id}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              ${esc(g.nombre)}
+            </a>`).join('');
+        }
+      });
+  })
+  .catch(() => {});
 } catch(e) {}
 
 
@@ -344,6 +356,7 @@ function pedirDeshabilitar(id, nombre) {
 async function confirmDeshabilitar() {
   if (!pendingDeshabilitarId) return;
   closeModal('modal-confirm');
+  closeModal('modal-editar');
   try {
     const res = await authFetch(`${API}/${pendingDeshabilitarId}`, { method: 'DELETE' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -372,7 +385,7 @@ function showToast(msg, type = 'success') {
 // ── KEYBOARD ──
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    ['modal-add', 'modal-confirm'].forEach(closeModal);
+    ['modal-add', 'modal-confirm', 'modal-crear-grupo'].forEach(closeModal);
   }
 });
 
@@ -532,6 +545,57 @@ function toggleSidebar() {
 function closeSidebar() {
   document.querySelector('.sidebar').classList.remove('open');
   document.getElementById('sidebar-overlay').classList.remove('show');
+}
+
+function toggleTareasMenu() {
+  const btn = document.querySelector('.nav-item-toggle');
+  const submenu = document.getElementById('submenu-tareas');
+  btn.classList.toggle('open');
+  submenu.classList.toggle('open');
+}
+
+function openModalCrearGrupo() {
+  document.getElementById('g-nombre').value = '';
+  document.getElementById('g-descripcion').value = '';
+  document.getElementById('form-error-grupo').style.display = 'none';
+  document.getElementById('modal-crear-grupo').classList.add('open');
+  setTimeout(() => document.getElementById('g-nombre').focus(), 80);
+}
+
+async function submitCrearGrupo() {
+  const nombre = document.getElementById('g-nombre').value.trim();
+  if (!nombre) {
+    document.getElementById('form-error-grupo').style.display = 'block';
+    return;
+  }
+  document.getElementById('form-error-grupo').style.display = 'none';
+
+  try {
+    const res = await authFetch(`${API_BASE}/grupos`, {
+      method: 'POST',
+      body: JSON.stringify({
+        nombre,
+        descripcion: document.getElementById('g-descripcion').value.trim() || null
+      })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const grupo = await res.json();
+    closeModal('modal-crear-grupo');
+    showToast(`Grupo "${nombre}" creado`, 'success');
+    // Redirigir al grupo recién creado
+    window.location.href = `../tareas/grupo.html?id=${grupo.id}`;
+  } catch (e) {
+    showToast('Error: ' + e.message, 'error');
+  }
+}
+
+function puenteDeshabilitar() {
+  const nombre = document.getElementById('e-nombre').value;
+  const apellido = document.getElementById('e-apellido').value;
+  
+  // Usamos la variable global 'editandoId' que ya se seteó al abrir el modal
+  closeModal('modal-editar');
+  pedirDeshabilitar(editandoId, `${nombre} ${apellido}`);
 }
 
 // ── INIT ──

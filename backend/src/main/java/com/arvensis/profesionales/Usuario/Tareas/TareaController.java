@@ -9,7 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping ("/usuarios/{usuarioId}/tareas")
@@ -23,10 +27,23 @@ public class TareaController {
     private UsuarioRepository usuarioRepository;
 
     @GetMapping
-    public ResponseEntity listar(@PathVariable Long usuarioId){
-        List<Tarea> tareas = tareaRepository.findByUsuarioId(usuarioId);
-        return ResponseEntity.ok(tareas.stream().map(t -> new RetornoTareaDTO(t.getId(), t.getTitulo(), t.getDescripcion(),
-        t.getFechaLimite(), t.getPrioridad(), t.getEstado(), t.getTipo())));
+    public ResponseEntity listar(@PathVariable Long usuarioId) {
+        List<Tarea> propias = tareaRepository.findByUsuarioId(usuarioId);
+        List<Tarea> asignadas = tareaRepository.findByUsuarioAsignadoId(usuarioId);
+
+        // Unir y deduplicar
+        Set<Long> ids = new HashSet<>();
+        List<Tarea> todas = new ArrayList<>();
+        Stream.concat(propias.stream(), asignadas.stream())
+                .filter(t -> ids.add(t.getId()))
+                .forEach(todas::add);
+
+        return ResponseEntity.ok(todas.stream().map(t -> new RetornoTareaDTO(
+                t.getId(), t.getTitulo(), t.getDescripcion(), t.getFechaLimite(),
+                t.getPrioridad(), t.getEstado(), t.getTipo(),
+                t.getUsuarioAsignado() != null ? t.getUsuarioAsignado().getId() : null,
+                t.getUsuarioAsignado() != null ? t.getUsuarioAsignado().getNombre() : null
+        )));
     }
 
     @Transactional
@@ -55,7 +72,9 @@ public class TareaController {
         tarea.actualizarDatos(datos);
 
         return ResponseEntity.ok(new RetornoTareaDTO(tarea.getId(), tarea.getTitulo(), tarea.getDescripcion(), tarea.getFechaLimite(),
-                tarea.getPrioridad(), tarea.getEstado(), tarea.getTipo()));
+                tarea.getPrioridad(), tarea.getEstado(), tarea.getTipo(),
+                tarea.getUsuarioAsignado() != null ? tarea.getUsuarioAsignado().getId() : null,
+                tarea.getUsuarioAsignado() != null ? tarea.getUsuarioAsignado().getNombre() : null));
     }
 
     @Transactional

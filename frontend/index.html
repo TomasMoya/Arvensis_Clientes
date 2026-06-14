@@ -18,7 +18,9 @@
   <aside class="sidebar">
     <div class="logo">
       <div class="logo-mark">
-        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <img src="\images\logoaromaherba.webp" width="52" height="52" class="logos"/>
+        <img src="\images\logoarvensis.jpg" width="52" height="52" class="logos"/>
+        <img src="\images\logoessence.webp" width="60" height="42" class="logos"/>
       </div>
       <div class="logo-name">Clientes</div>
       <div class="logo-sub">v2.2 · arvensis</div>
@@ -38,10 +40,24 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
         Usuarios
       </a>
-      <a class="nav-item" href="../tareas/tareas.html" id="nav-tareas" style="display:none">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        Mis tareas
-      </a>
+      <div class="nav-item-group">
+        <button class="nav-item nav-item-toggle" onclick="toggleTareasMenu()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Tareas
+          <svg class="chevron" id="chevron-tareas" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="nav-submenu" id="submenu-tareas">
+          <a class="nav-subitem" href="../tareas/tareas.html" id="nav-mis-tareas">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a7 7 0 0 1 13 0"/></svg>
+            Mis tareas
+          </a>
+          <div id="nav-grupos"></div>
+          <button class="nav-subitem" onclick="openModalCrearGrupo()" style="background:none;border:none;width:100%;text-align:left;cursor:pointer;font-family:var(--sans)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Crear grupo
+          </button>
+        </div>
+      </div>
     </nav>
 
     
@@ -291,8 +307,37 @@
     </div>
     <div class="form-error" id="form-error-editar">Nombre y apellido son obligatorios.</div>
     <div class="modal-footer">
+      <button class="btn btn-sm btn-danger" id="btn-eliminar" onclick="puenteDeshabilitar()">Deshabilitar</button>
       <button class="btn" onclick="closeModal('modal-editar')">Cancelar</button>
       <button class="btn btn-primary" onclick="submitEditar()">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CREAR GRUPO DE TAREAS -->
+<div class="modal-overlay" id="modal-crear-grupo" onclick="if(event.target===this)closeModal('modal-crear-grupo')">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Nuevo grupo</div>
+        <div class="modal-sub">Creá un grupo de tareas compartido.</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-crear-grupo')">×</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-row full">
+        <label class="form-label">Nombre *</label>
+        <input type="text" id="g-nombre" placeholder="Ej: Atención al cliente" />
+      </div>
+      <div class="form-row full">
+        <label class="form-label">Descripción</label>
+        <input type="text" id="g-descripcion" placeholder="Descripción del grupo" />
+      </div>
+    </div>
+    <div class="form-error" id="form-error-grupo">El nombre es obligatorio.</div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-crear-grupo')">Cancelar</button>
+      <button class="btn btn-primary" onclick="submitCrearGrupo()">Crear grupo</button>
     </div>
   </div>
 </div>

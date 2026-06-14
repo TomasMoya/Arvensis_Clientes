@@ -11,6 +11,7 @@ public record DatosActualizarTareaDTO(
         LocalDateTime fechaLimite,
         Prioridad prioridad,
         EstadoTarea estado,
-        TipoTarea tipo
+        TipoTarea tipo,
+        Long usuarioAsignadoId
 ) {
 }

@@ -74,6 +74,48 @@ body {
 .logo-name { font-size: 15px; font-weight: 500; letter-spacing: -0.02em; }
 .logo-sub { font-size: 11px; color: var(--text-3); font-family: var(--mono); }
 
+.nav-item-group { display: flex; flex-direction: column; }
+
+.nav-item-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  font-family: var(--sans);
+  cursor: pointer;
+}
+
+.nav-item-toggle .chevron {
+  width: 14px; height: 14px;
+  margin-left: auto;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.nav-item-toggle.open .chevron { transform: rotate(180deg); }
+
+.nav-submenu {
+  display: none;
+  flex-direction: column;
+  padding-left: 12px;
+  gap: 2px;
+}
+
+.nav-submenu.open { display: flex; }
+
+.nav-subitem {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 12px;
+  border-radius: var(--radius);
+  font-size: 12.5px; color: var(--text-3);
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+}
+
+.nav-subitem:hover { background: var(--surface2); color: var(--text); }
+.nav-subitem svg { width: 13px; height: 13px; flex-shrink: 0; opacity: 0.7; }
+
+
 .nav { flex: 1; padding: 0 10px; }
 
 .nav-item {
@@ -324,6 +366,24 @@ body {
 .btn-danger { background: var(--red-bg); color: var(--red); border-color: var(--red-border); }
 .btn-danger:hover { background: #3d1010; }
 .btn-sm { height: 26px; padding: 0 10px; font-size: 11px; border-radius: 7px; }
+
+/* Estilo específico para el botón de eliminar grupo (Esquema Outline Danger) */
+.btn.btn-outline-danger {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--red);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.btn.btn-outline-danger svg {
+  stroke: var(--red);
+}
+
+/* Efecto Hover */
+.btn.btn-outline-danger:hover {
+  background: var(--red-bg);
+  border-color: var(--red);
+}
 
 /* ─── INPUTS ─── */
 input[type="text"], input[type="datetime-local"], select, textarea {

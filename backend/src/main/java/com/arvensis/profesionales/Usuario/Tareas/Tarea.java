@@ -1,10 +1,10 @@
 package com.arvensis.profesionales.Usuario.Tareas;
 
+import com.arvensis.profesionales.Usuario.Tareas.GrupoTareas.GrupoTareas;
 import com.arvensis.profesionales.Usuario.Usuario;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,6 +31,14 @@ public class Tarea {
     @JoinColumn (name = "usuario_id")
     @JsonIgnore
     private Usuario usuario;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "grupo_id")
+    @JsonIgnore
+    private GrupoTareas grupoTareas;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_asignado_id")
+    @JsonIgnore
+    private Usuario usuarioAsignado;
 
     public void actualizarDatos(DatosActualizarTareaDTO datos){
         if (datos.titulo() != null) this.titulo = datos.titulo();

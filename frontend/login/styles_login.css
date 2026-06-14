@@ -85,7 +85,7 @@ body {
 }
 
 .logo-mark {
-  width: 48px; height: 48px;
+  width: 270px; height: 48px;
   background: var(--accent-dim);
   border: 1px solid var(--accent-border);
   border-radius: 14px;
@@ -98,6 +98,12 @@ body {
   stroke: var(--accent);
   fill: none;
   stroke-width: 1.75;
+}
+
+.logos {
+  padding: 8px;
+  margin: 10px;
+  border-radius: 15px;
 }
 
 .card-title {
