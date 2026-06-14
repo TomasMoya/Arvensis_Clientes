@@ -231,6 +231,11 @@ function renderObjetivos() {
 
     container.innerHTML = lista.map(t => {
       const finalizada = t.estado === 'FINALIZADA';
+      const asignadoLabel = t.usuarioAsignadoNombre
+      ? `<span class="card-asignado">
+          ${esc(t.usuarioAsignadoNombre)}
+        </span>`
+      : '';
       const badgePrioridad = t.prioridad
         ? `<span class="badge-prioridad badge-${t.prioridad}">${t.prioridad}</span>`
         : '';
@@ -251,6 +256,7 @@ function renderObjetivos() {
             ${t.descripcion ? `<div class="objetivo-desc">${esc(t.descripcion)}</div>` : ''}
           </div>
           <div class="objetivo-meta">
+            ${asignadoLabel}
             ${badgePrioridad}
             ${fechaLabel}
             <div class="objetivo-actions">

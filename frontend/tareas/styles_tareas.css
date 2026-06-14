@@ -325,6 +325,12 @@ body {
 
 .card-fecha.vencida { color: var(--red); }
 
+.card-asignado{
+  font-size: 10px; font-weight: 500; font-family: var(--mono);
+  padding: 2px 8px; border-radius: 999px;
+  background-color: #6B6860;
+}
+
 .card-actions {
   display: flex; gap: 6px;
   margin-top: 10px;
