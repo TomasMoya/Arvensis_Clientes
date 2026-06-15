@@ -475,5 +475,41 @@ function toggleTareasMenu() {
   submenu.classList.toggle('open');
 }
 
+// ── CREAR GRUPO ──
+function openModalCrearGrupo() {
+  document.getElementById('g-nombre').value = '';
+  document.getElementById('g-descripcion').value = '';
+  document.getElementById('form-error-grupo').style.display = 'none';
+  document.getElementById('modal-crear-grupo').classList.add('open');
+  setTimeout(() => document.getElementById('g-nombre').focus(), 80);
+}
+
+async function submitCrearGrupo() {
+  const nombre = document.getElementById('g-nombre').value.trim();
+  if (!nombre) {
+    document.getElementById('form-error-grupo').style.display = 'block';
+    return;
+  }
+  document.getElementById('form-error-grupo').style.display = 'none';
+
+  try {
+    const res = await authFetch(`${API_BASE}/grupos`, {
+      method: 'POST',
+      body: JSON.stringify({
+        nombre,
+        descripcion: document.getElementById('g-descripcion').value.trim() || null
+      })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const grupo = await res.json();
+    closeModal('modal-crear-grupo');
+    showToast(`Grupo "${nombre}" creado`, 'success');
+    // Redirigir al grupo recién creado
+    window.location.href = `../tareas/grupo.html?id=${grupo.id}`;
+  } catch (e) {
+    showToast('Error: ' + e.message, 'error');
+  }
+}
+
 // ── INIT ──
 cargarTareas();

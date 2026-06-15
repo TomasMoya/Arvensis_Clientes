@@ -275,6 +275,34 @@
   </div>
 </div>
 
+<!-- MODAL CREAR GRUPO DE TAREAS -->
+<div class="modal-overlay" id="modal-crear-grupo" onclick="if(event.target===this)closeModal('modal-crear-grupo')">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Nuevo grupo</div>
+        <div class="modal-sub">Creá un grupo de tareas compartido.</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-crear-grupo')">×</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-row full">
+        <label class="form-label">Nombre *</label>
+        <input type="text" id="g-nombre" placeholder="Ej: Atención al cliente" />
+      </div>
+      <div class="form-row full">
+        <label class="form-label">Descripción</label>
+        <input type="text" id="g-descripcion" placeholder="Descripción del grupo" />
+      </div>
+    </div>
+    <div class="form-error" id="form-error-grupo">El nombre es obligatorio.</div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-crear-grupo')">Cancelar</button>
+      <button class="btn btn-primary" onclick="submitCrearGrupo()">Crear grupo</button>
+    </div>
+  </div>
+</div>
+
 <script src="grupo_script.js"></script>
 </body>
 </html>
