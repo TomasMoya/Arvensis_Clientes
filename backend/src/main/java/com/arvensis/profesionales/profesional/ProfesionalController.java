@@ -54,15 +54,15 @@ public class ProfesionalController {
     }
 
     @GetMapping("/sin-compra")
-    public ResponseEntity mostrarProfesionalesSinComprarDespuesDeTreintaDias(){
-        LocalDateTime hace30Dias = LocalDateTime.now().minusDays(30);
+    public ResponseEntity mostrarProfesionalesSinComprarDespuesDeQuinceDias(){
+        LocalDateTime hace15Dias = LocalDateTime.now().minusDays(15);
 
         List<Profesional> profesionalesSinComprar = profesionalRepository.findAll()
                 .stream()
                 .filter(p -> p.getTrazabilidad() != null)
                 .filter(p -> p.getTrazabilidad().isSeLeHablo())
                 .filter(p -> !p.getTrazabilidad().isCompro())
-                .filter(p -> p.getTrazabilidad().getFechaQueSeLeHablo().isBefore(hace30Dias))
+                .filter(p -> p.getTrazabilidad().getFechaQueSeLeHablo().isBefore(hace15Dias))
                 .toList();
 
         return ResponseEntity.ok(profesionalesSinComprar.stream().map(p -> new RetornoSinComprarDTO(p.getId(), p.getNombre(), p.getApellido(), p.getEmail(), p.getTelefono(), p.getDireccion(), p.getProfesion(), p.getTrazabilidad().getFechaQueSeLeHablo())));

@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tareas — Arvensis</title>
+  <title>Calendario — Arvensis</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles_tareas.css" />
+  <link rel="stylesheet" href="styles_calendario.css" />
 </head>
 <body>
+
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
 <div class="layout">
@@ -76,141 +77,93 @@
             <line x1="3" y1="18" x2="21" y2="18"/>
           </svg>
         </button>
-        <a class="back-btn" href="../usuarios/usuarios.html">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-        </a>
         <div>
-          <div class="page-title" id="page-title">Tareas</div>
-          <div class="page-sub" id="page-sub">Cargando...</div>
+          <div class="page-title">Calendario</div>
+          <div class="page-sub" id="page-sub">Próximos 30 días</div>
         </div>
       </div>
       <div class="topbar-right">
-        <button class="btn btn-primary" id="btn-nueva-tarea" onclick="openModal()" style="display:none">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Nueva tarea
-        </button>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot dot-tarea"></span>Tarea</span>
+          <span class="legend-item"><span class="legend-dot dot-mensual"></span>Obj. mensual</span>
+          <span class="legend-item"><span class="legend-dot dot-trimestral"></span>Obj. trimestral</span>
+        </div>
       </div>
     </header>
 
     <main class="content">
-      <div class="objetivos-section" id="objetivos-section">
-        <div class="objetivos-group" id="group-trimestral">
-          <div class="objetivos-header">
-            <span class="obj-dot dot-trimestral"></span>
-            <span class="obj-label">Objetivos trimestrales</span>
-            <span class="obj-count" id="count-trimestral">0</span>
-          </div>
-          <div class="objetivos-list" id="list-OBJETIVO_TRIMESTRAL"></div>
-        </div>
-        <div class="objetivos-group" id="group-mensual">
-          <div class="objetivos-header">
-            <span class="obj-dot dot-mensual"></span>
-            <span class="obj-label">Objetivos mensuales</span>
-            <span class="obj-count" id="count-mensual">0</span>
-          </div>
-          <div class="objetivos-list" id="list-OBJETIVO_MENSUAL"></div>
-        </div>
-        <div class="objetivos-group" id="group-anual">
-          <div class="objetivos-header">
-            <span class="obj-dot dot-anual"></span>
-            <span class="obj-label">Objetivos anuales</span>
-            <span class="obj-count" id="count-anual">0</span>
-          </div>
-          <div class="objetivos-list" id="list-OBJETIVO_ANUAL"></div>
-      </div>
-      <div class="board" id="board">
-        <div class="column" ondragover="onDragOver(event)" ondrop="onDrop(event, 'PENDIENTE')">
-          <div class="column-header">
-            <span class="col-dot dot-pendiente"></span>
-            <span class="col-title">Pendiente</span>
-            <span class="col-count" id="count-PENDIENTE">0</span>
-          </div>
-          <div class="cards" id="cards-PENDIENTE"></div>
-        </div>
-        <div class="column" ondragover="onDragOver(event)" ondrop="onDrop(event, 'PROCESANDO')">
-          <div class="column-header">
-            <span class="col-dot dot-procesando"></span>
-            <span class="col-title">Procesando</span>
-            <span class="col-count" id="count-PROCESANDO">0</span>
-          </div>
-          <div class="cards" id="cards-PROCESANDO"></div>
-        </div>
-        <div class="column" ondragover="onDragOver(event)" ondrop="onDrop(event, 'FINALIZADA')">
-          <div class="column-header">
-            <span class="col-dot dot-finalizada"></span>
-            <span class="col-title">Finalizada</span>
-            <span class="col-count" id="count-FINALIZADA">0</span>
-          </div>
-          <div class="cards" id="cards-FINALIZADA"></div>
+      <div class="cal-wrap" id="cal-wrap">
+        <div class="cal-grid" id="cal-grid">
+          <!-- generado por JS -->
         </div>
       </div>
     </main>
   </div>
 </div>
 
-<!-- MODAL CREAR TAREA -->
-<div class="modal-overlay" id="modal-add" onclick="if(event.target===this)closeModal('modal-add')">
+<!-- MODAL EDITAR TAREA -->
+<div class="modal-overlay" id="modal-editar" onclick="if(event.target===this)closeModal('modal-editar')">
   <div class="modal">
     <div class="modal-header">
       <div>
-        <div class="modal-title">Nueva tarea</div>
-        <div class="modal-sub">Completá los campos requeridos.</div>
+        <div class="modal-title">Editar tarea</div>
+        <div class="modal-sub" id="modal-origen">—</div>
       </div>
-      <button class="modal-close" onclick="closeModal('modal-add')">×</button>
+      <button class="modal-close" onclick="closeModal('modal-editar')">×</button>
     </div>
     <div class="form-grid">
       <div class="form-row full">
         <label class="form-label">Título *</label>
-        <input type="text" id="f-titulo" placeholder="Ej: Llamar al cliente" />
+        <input type="text" id="e-titulo" />
       </div>
       <div class="form-row full">
         <label class="form-label">Descripción</label>
-        <textarea id="f-descripcion" placeholder="Descripción de la tarea..." rows="3"></textarea>
+        <textarea id="e-descripcion" rows="3"></textarea>
       </div>
       <div class="form-row">
         <label class="form-label">Fecha límite</label>
-        <input type="datetime-local" id="f-fechalimite" />
+        <input type="datetime-local" id="e-fechalimite" />
       </div>
       <div class="form-row">
         <label class="form-label">Prioridad</label>
-        <select id="f-prioridad">
+        <select id="e-prioridad">
           <option value="">Sin prioridad</option>
           <option value="BAJA">Baja</option>
           <option value="MEDIA">Media</option>
           <option value="ALTA">Alta</option>
         </select>
       </div>
-      <div class="form-row full">
+      <div class="form-row">
+        <label class="form-label">Estado</label>
+        <select id="e-estado">
+          <option value="PENDIENTE">Pendiente</option>
+          <option value="PROCESANDO">Procesando</option>
+          <option value="FINALIZADA">Finalizada</option>
+        </select>
+      </div>
+      <div class="form-row">
         <label class="form-label">Tipo</label>
-        <select id="f-tipo">
+        <select id="e-tipo">
           <option value="TAREA">Tarea</option>
-          <option value="OBJETIVO_MENSUAL">Objetivo Mensual</option>
-          <option value="OBJETIVO_TRIMESTRAL">Objetivo Trimestral</option>
-          <option value="OBJETIVO_ANUAL">Objetivo Anual</option>
+          <option value="OBJETIVO_MENSUAL">Obj. mensual</option>
+          <option value="OBJETIVO_TRIMESTRAL">Obj. trimestral</option>
         </select>
       </div>
     </div>
-    <div class="form-error" id="form-error">El título es obligatorio.</div>
+    <div class="form-error" id="form-error-editar">El título es obligatorio.</div>
     <div class="modal-footer">
-      <button class="btn" onclick="closeModal('modal-add')">Cancelar</button>
-      <button class="btn btn-primary" onclick="submitForm()">Crear tarea</button>
+      <button class="btn" onclick="closeModal('modal-editar')">Cancelar</button>
+      <button class="btn btn-primary" onclick="submitEditar()">Guardar cambios</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL CONFIRMAR ELIMINAR -->
-<div class="modal-overlay" id="modal-confirm" onclick="if(event.target===this)closeModal('modal-confirm')">
-  <div class="modal confirm-modal">
-    <div class="confirm-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-    </div>
-    <div class="confirm-title">¿Eliminar tarea?</div>
-    <div class="confirm-sub">Esta acción no se puede deshacer.</div>
-    <div class="modal-footer" style="justify-content:center;margin-top:18px;">
-      <button class="btn" onclick="closeModal('modal-confirm')">Cancelar</button>
-      <button class="btn btn-danger" onclick="confirmarEliminar()">Sí, eliminar</button>
-    </div>
-  </div>
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toast-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  </span>
+  <span id="toast-msg"></span>
 </div>
 
 <!-- MODAL CREAR GRUPO DE TAREAS -->
@@ -241,14 +194,6 @@
   </div>
 </div>
 
-<!-- TOAST -->
-<div class="toast" id="toast">
-  <span class="toast-icon" id="toast-icon">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-  </span>
-  <span id="toast-msg"></span>
-</div>
-
-<script src="tareas_script.js"></script>
+<script src="calendario_script.js"></script>
 </body>
 </html>

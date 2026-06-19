@@ -478,6 +478,28 @@ async function confirmarImportacion() {
   }
 }
 
+// ── EXPORTAR EXCEL ──
+async function exportarExcel() {
+  try {
+    const res = await fetch(`${API}/exportar`, {
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('tokenJWT') }
+    });
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'profesionales.xlsx';
+    a.click();
+
+    window.URL.revokeObjectURL(url);
+} catch (e) {
+    showToast('Error al exportar: ' + e.message, 'error');
+};
+}
+
+
 // ── EDITAR PROFESIONAL ──
 let editandoId = null;
 

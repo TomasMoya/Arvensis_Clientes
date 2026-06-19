@@ -89,7 +89,7 @@ async function cargarSinCompra() {
     const banner = document.getElementById('alert-banner');
     if (lista.length > 0) {
       document.getElementById('alert-text').textContent =
-        `Hay ${lista.length} profesional${lista.length !== 1 ? 'es' : ''} que no compraron en los últimos 30 días.`;
+        `Hay ${lista.length} profesional${lista.length !== 1 ? 'es' : ''} que no compraron en los últimos 15 días.`;
       banner.style.display = 'flex';
     } else {
       banner.style.display = 'none';
@@ -119,7 +119,7 @@ function renderTabla(lista) {
         <div class="empty-state">
           <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
           <div class="empty-title">Todo en orden</div>
-          <div class="empty-sub">No hay profesionales sin compra en los últimos 30 días</div>
+          <div class="empty-sub">No hay profesionales sin compra en los últimos 15 días</div>
         </div>
       </td></tr>`;
     return;
