@@ -37,4 +37,13 @@ public class GrupoTareas {
     @OneToMany(mappedBy = "grupoTareas", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Tarea> tareas = new ArrayList<>();
+
+    public void actualizarGrupo(DatosActualizarGrupoDTO datos){
+        if (datos.nombre() != null){
+            this.nombre = datos.nombre();
+        }
+        if (datos.descripcion() != null){
+            this.descripcion = datos.descripcion();
+        }
+    }
 }

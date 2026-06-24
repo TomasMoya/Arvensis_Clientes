@@ -154,4 +154,14 @@ public class GrupoTareasController {
         tareaRepository.deleteById(tareaId);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{grupoId}")
+    @Transactional
+    public ResponseEntity actualizarGrupo(@PathVariable Long grupoId, @RequestBody DatosActualizarGrupoDTO datos) {
+        GrupoTareas grupo = grupoRepository.findById(grupoId)
+                .orElseThrow(() -> new EntityNotFoundException("Grupo no encontrado"));
+
+        grupo.actualizarGrupo(datos);
+        return ResponseEntity.ok("El grupo se actualizó correctamente");
+    }
 }
