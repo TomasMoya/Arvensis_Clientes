@@ -96,8 +96,10 @@ async function cargarDatos() {
         document.getElementById('page-title').textContent = grupo.nombre;
         document.getElementById('page-sub').textContent = grupo.descripcion ?? '';
         miembros = grupo.miembros ?? [];
+        const accionesGenerales = document.querySelector("div.topbar-right")
+        if (grupo.descripcion != null) accionesGenerales.classList.add("topbar-right-with-description")
       }
-    }
+      }
 
     // Cargar tareas del grupo
     const res = await authFetch(`${API_BASE}/grupos/${id}/tareas`);
@@ -171,6 +173,21 @@ function renderCard(t) {
        </span>`
     : '';
 
+  const estados = ['PENDIENTE', 'PROCESANDO', 'FINALIZADA'];
+  const idxEstado = estados.indexOf(t.estado);
+
+  const btnAnterior = idxEstado > 0
+    ? `<button class="btn btn-sm" onclick="moverTarea(${t.id}, '${estados[idxEstado - 1]}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>`
+    : '';
+
+  const btnSiguiente = idxEstado < estados.length - 1
+    ? `<button class="btn btn-sm" onclick="moverTarea(${t.id}, '${estados[idxEstado + 1]}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>`
+    : '';
+
   return `
     <div class="card"
       id="card-${t.id}"
@@ -185,6 +202,8 @@ function renderCard(t) {
         ${fechaLabel}
       </div>
       <div class="card-actions">
+        ${btnAnterior}
+        ${btnSiguiente}
         <button class="btn btn-sm" onclick="abrirModalEditar(${t.id})">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           Editar
@@ -318,6 +337,30 @@ async function onDrop(event, nuevoEstado) {
     cargarDatos();
   }
   draggedId = null;
+}
+
+// ── MOVER TAREA ──
+async function moverTarea(id, nuevoEstado) {
+  const tarea = tareas.find(t => t.id === id);
+  if (!tarea) return;
+
+  tarea.estado = nuevoEstado;
+  renderBoard();
+
+  try {
+    const res = await authFetch(`${API_BASE}/grupos/${getGrupoId()}/tareas/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ estado: nuevoEstado })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const actualizada = await res.json();
+    const idx = tareas.findIndex(t => t.id === id);
+    if (idx !== -1) tareas[idx] = actualizada;
+    renderBoard();
+  } catch (e) {
+    showToast('Error al mover: ' + e.message, 'error');
+    cargarDatos();
+  }
 }
 
 // ── TOGGLE OBJETIVO ──
