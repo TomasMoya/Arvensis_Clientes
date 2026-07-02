@@ -9,6 +9,7 @@ public record RetornoProfesionalDTO (
         String telefono,
         String direccion,
         PersonalAsignado personalAsignado,
-        Profesion profesion
+        Profesion profesion,
+        boolean seLeHablo
 ) {
 }

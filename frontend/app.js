@@ -94,9 +94,14 @@ async function loadProfesionales(page = 0) {
   currentPage = page;
   document.getElementById('last-update').textContent = 'Cargando…';
   try {
-    const res = await authFetch(`${API}?page=${page}&size=${pageSize}`);
+    const busqueda = document.getElementById('search').value.trim();
+    const url = busqueda
+      ? `${API}?page=${page}&size=${pageSize}&busqueda=${encodeURIComponent(busqueda)}`
+      : `${API}?page=${page}&size=${pageSize}`;
+
+    const res = await authFetch(url);
     const resDes = await authFetch(`${API}/deshabilitados`);
-    if (!res.ok || !resDes.ok) throw new Error('HTTP ' + res.status + resDes.status);
+    if (!res.ok || !resDes.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     const dataDes = await resDes.json();
     allData = Array.isArray(data.content) ? data.content : (Array.isArray(data) ? data : []);
@@ -147,18 +152,13 @@ async function loadProfesionales(page = 0) {
 }
 
 // ── FILTER & SORT ──
-function filterTable() {
-  const q = document.getElementById('search').value.toLowerCase().trim();
-  const personal = document.getElementById('filter-estado')?.value ?? '';
-  const prof = document.getElementById('filter-prof')?.value ?? '';
+let searchTimeout = null;
 
-  filtered = allData.filter(p => {
-    const text = `${p.nombre} ${p.apellido} ${p.profesion} ${p.email} ${p.telefono}`.toLowerCase();
-    return (!q || text.includes(q))
-        && (!personal || p.personalAsignado === personal)
-        && (!prof || p.profesion === prof);
-  });
-  renderTable();
+function filterTable() {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    loadProfesionales(0);
+  }, 400);
 }
 
 function sortBy(field) {
@@ -199,6 +199,20 @@ function renderTable() {
     const btnMapa = p.direccion
       ? `<a class="btn btn-ver-mapa" href="https://www.google.com/maps/search/${encodeURIComponent(p.direccion)}" target="_blank" rel="noopener noreferrer">Ver Mapa</a>`
       : '';
+    const btnWhatsApp = p.telefono
+      ? `<a href="https://wa.me/54${p.telefono}" target="WhatsApp">
+          <button class="btn btn-sm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            WhatsApp
+          </button>
+        </a>`
+      : '';
+    const dotSeLeHablo = p.seLeHablo
+      ? `<span class="dot-hablo" title="Se le habló"></span>`
+      : '';
 
     return `<tr>
       <td>
@@ -207,6 +221,7 @@ function renderTable() {
           <a class="name-text" href="../trazabilidad/trazabilidad.html?id=${p.id}" style="text-decoration:none;color:inherit;cursor:pointer;">
             ${esc(p.nombre)} ${esc(p.apellido)}
           </a>
+          ${dotSeLeHablo}
         </div>
       </td>
       <td><span class="tag-prof">${esc((p.profesion ?? '—').replace("_", " "))}</span></td>
@@ -227,7 +242,7 @@ function renderTable() {
           <option value="PAO"   ${(p.personalAsignado ?? '') === 'PAO'   ? 'selected' : ''}>Pao</option>
         </select>
       </td>
-      <td><div class="actions">${btnMapa}${btnEditar}</div></td>
+      <td><div class="actions">${btnMapa}${btnEditar}${btnWhatsApp}</div></td>
     </tr>`;
   }).join('');
 
@@ -313,6 +328,8 @@ async function submitForm() {
   fields.forEach(f => {
     data[f] = document.getElementById('f-' + f).value.trim();
   });
+
+  if (!data.profesion) data.profesion = null;
 
   if (!data.nombre || !data.apellido) {
     valid = false;

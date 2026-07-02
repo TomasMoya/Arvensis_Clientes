@@ -34,18 +34,28 @@ public class ProfesionalController {
     }
 
     @GetMapping
-    public ResponseEntity mostrarProfesionales(@RequestParam(required = false) String estado, @PageableDefault(size = 10) Pageable pageable) {
-        if (estado != null) {
-            return ResponseEntity.ok(profesionalRepository.findByEstado(Estado.valueOf(estado), pageable)
-                    .map(p -> new RetornoProfesionalDTO(p.getId(), p.getNombre(), p.getApellido(), p.getEmail(), p.getTelefono(), p.getDireccion(), p.getPersonalAsignado(), p.getProfesion())));
+    public ResponseEntity mostrarProfesionales(
+            @RequestParam(required = false) String estado,
+            @RequestParam(required = false) String busqueda,
+            @PageableDefault(size = 10) Pageable pageable) {
+
+        if (busqueda != null && !busqueda.isBlank()) {
+            return ResponseEntity.ok(profesionalRepository.buscar(busqueda, pageable)
+                    .map(p -> new RetornoProfesionalDTO(p.getId(), p.getNombre(), p.getApellido(), p.getEmail(), p.getTelefono(), p.getDireccion(), p.getPersonalAsignado(), p.getProfesion(), p.getTrazabilidad() != null && p.getTrazabilidad().isSeLeHablo())));
         }
 
-        return ResponseEntity.ok(profesionalRepository.findByEstadoHabilitado(pageable).map(p -> new RetornoProfesionalDTO(p.getId(), p.getNombre(), p.getApellido(), p.getEmail(), p.getTelefono(), p.getDireccion(), p.getPersonalAsignado(), p.getProfesion())));
+        if (estado != null) {
+            return ResponseEntity.ok(profesionalRepository.findByEstado(Estado.valueOf(estado), pageable)
+                    .map(p -> new RetornoProfesionalDTO(p.getId(), p.getNombre(), p.getApellido(), p.getEmail(), p.getTelefono(), p.getDireccion(), p.getPersonalAsignado(), p.getProfesion(), p.getTrazabilidad() != null && p.getTrazabilidad().isSeLeHablo())));
+        }
+
+        return ResponseEntity.ok(profesionalRepository.findByEstadoHabilitado(pageable)
+                .map(p -> new RetornoProfesionalDTO(p.getId(), p.getNombre(), p.getApellido(), p.getEmail(), p.getTelefono(), p.getDireccion(), p.getPersonalAsignado(), p.getProfesion(), p.getTrazabilidad() != null && p.getTrazabilidad().isSeLeHablo())));
     }
 
     @GetMapping("/deshabilitados")
     public ResponseEntity mostrarProfesionalesDeshabilitados(@PageableDefault(size = 10) Pageable pageable){
-        return  ResponseEntity.ok(profesionalRepository.findByEstadoDeshabilitado(pageable).map(p -> new RetornoProfesionalDTO(p.getId(), p.getNombre(), p.getApellido(), p.getEmail(), p.getTelefono(), p.getDireccion(), p.getPersonalAsignado(), p.getProfesion())));
+        return  ResponseEntity.ok(profesionalRepository.findByEstadoDeshabilitado(pageable).map(p -> new RetornoProfesionalDTO(p.getId(), p.getNombre(), p.getApellido(), p.getEmail(), p.getTelefono(), p.getDireccion(), p.getPersonalAsignado(), p.getProfesion(), p.getTrazabilidad() != null && p.getTrazabilidad().isSeLeHablo())));
     }
 
     @GetMapping("/profesiones")
@@ -73,7 +83,7 @@ public class ProfesionalController {
         Profesional profesional = profesionalRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No se encontró el registro con el id especificado"));
 
-        return ResponseEntity.ok(new RetornoProfesionalDTO(profesional.getId(), profesional.getNombre(), profesional.getApellido(), profesional.getEmail(), profesional.getTelefono(), profesional.getDireccion(), profesional.getPersonalAsignado(), profesional.getProfesion()));
+        return ResponseEntity.ok(new RetornoProfesionalDTO(profesional.getId(), profesional.getNombre(), profesional.getApellido(), profesional.getEmail(), profesional.getTelefono(), profesional.getDireccion(), profesional.getPersonalAsignado(), profesional.getProfesion(), profesional.getTrazabilidad() != null && profesional.getTrazabilidad().isSeLeHablo()));
     }
 
     @Transactional

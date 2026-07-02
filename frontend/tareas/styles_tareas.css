@@ -652,4 +652,5 @@ select { height: 38px; }
   .hamburger { display: flex; }
   .card-actions { opacity: 1; }
   .topbar-right-with-description { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .back-btn { display: none;}
 }

@@ -99,11 +99,13 @@ public class GrupoTareasController {
     @PostMapping("/{grupoId}/tareas")
     @Transactional
     public ResponseEntity crearTarea(@PathVariable Long grupoId,
-                                     @RequestBody @Valid DatosCrearTareaDTO datos,
+                                     @RequestBody @Valid DatosCrearTareaEnGrupoDTO datos,
                                      Authentication authentication) {
         GrupoTareas grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new EntityNotFoundException("Grupo no encontrado"));
         Usuario usuario = (Usuario) authentication.getPrincipal();
+        Usuario asignado = usuarioRepository.findById(datos.usuarioAsignadoId())
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
         Tarea tarea = new Tarea();
         tarea.setTitulo(datos.titulo());
         tarea.setDescripcion(datos.descripcion());
@@ -113,6 +115,7 @@ public class GrupoTareasController {
         tarea.setTipo(datos.tipo() != null ? datos.tipo() : TipoTarea.TAREA);
         tarea.setGrupoTareas(grupo);
         tarea.setUsuario(usuario);
+        tarea.setUsuarioAsignado(asignado);
         tareaRepository.save(tarea);
         return ResponseEntity.status(201).build();
     }
