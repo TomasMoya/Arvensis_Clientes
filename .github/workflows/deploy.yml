@@ -20,5 +20,6 @@ jobs:
           script: |
             cd DeployDonWeb/Arvensis_Clientes && \
             git pull && \
-            docker-compose down && \
-            docker-compose up --build -d
+            docker-compose build && \
+            docker-compose up -d --force-recreate && \
+            docker image prune -f
