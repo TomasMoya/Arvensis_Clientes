@@ -43,6 +43,7 @@ public class SecurityConfigurations {
                     req.requestMatchers(HttpMethod.POST, "/usuarios/*/tareas").authenticated();
                     req.requestMatchers(HttpMethod.DELETE, "/usuarios/*/tareas/*").authenticated();
                     req.requestMatchers("/grupos/**").authenticated();
+                    req.requestMatchers("/tareas/**").authenticated();
                     req.requestMatchers("/calendario/**").authenticated();
                     req.requestMatchers("/profesionales/exportar").authenticated();
                     req.requestMatchers("/usuarios/**").hasRole("ADMIN");

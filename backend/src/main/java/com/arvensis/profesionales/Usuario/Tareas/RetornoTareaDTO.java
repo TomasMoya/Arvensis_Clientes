@@ -6,6 +6,7 @@ public record RetornoTareaDTO(
         Long id,
         String titulo,
         String descripcion,
+        LocalDateTime fechaCreacion,
         LocalDateTime fechaLimite,
         Prioridad prioridad,
         EstadoTarea estado,

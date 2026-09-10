@@ -19,13 +19,13 @@ function authFetch(url, options = {}) {
     window.location.href = '../login/login.html';
     return;
   }
+  const headers = { 'Authorization': 'Bearer ' + token, ...(options.headers || {}) };
+  if (!(options.body instanceof FormData)) {
+    headers['Content-Type'] = 'application/json';
+  }
   return fetch(url, {
     ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token,
-      ...(options.headers || {})
-    }
+    headers
   }).then(res => {
     if (res.status === 401) {
       localStorage.removeItem('tokenJWT');
@@ -39,6 +39,7 @@ function authFetch(url, options = {}) {
 authFetch(`${API_BASE}/usuarios/me`)
   .then(res => res.json())
   .then(yo => {
+    usuarioActualId = yo.id;
     const navMisTareas = document.getElementById('nav-mis-tareas');
     if (navMisTareas && yo.id) {
       navMisTareas.href = `../tareas/tareas.html?id=${yo.id}`;
@@ -74,6 +75,13 @@ function formatFecha(iso) {
   });
 }
 
+function formatFechaHora(iso) {
+  if (!iso) return null;
+  return new Date(iso).toLocaleString('es-AR', {
+    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+  });
+}
+
 function isVencida(iso) {
   if (!iso) return false;
   return new Date(iso) < new Date();
@@ -82,6 +90,8 @@ function isVencida(iso) {
 let tareas = [];
 let draggedId = null;
 let pendingEliminarId = null;
+let usuarioActualId = null;
+let adjuntosActuales = [];
 
 // ── CARGAR TAREAS ──
 async function cargarTareas() {
@@ -136,7 +146,12 @@ function renderObjetivos() {
     if (!container) return; // Validación por si estás en la pestaña de grupos y cambia el HTML
 
     if (!lista.length) {
-      container.innerHTML = `<div class="empty-objetivos">Sin objetivos</div>`;
+      const periodos = {
+        OBJETIVO_TRIMESTRAL: 'este trimestre',
+        OBJETIVO_MENSUAL: 'este mes',
+        OBJETIVO_ANUAL: 'este año'
+      };
+      container.innerHTML = `<div class="empty-objetivos">Sin objetivos ${periodos[tipo] || ''} <button class="empty-add-link" onclick="openModalConTipo('${tipo}')">+ Agregar objetivo</button></div>`;
       return;
     }
 
@@ -365,13 +380,28 @@ async function moverTarea(id, nuevoEstado) {
 
 // ── MODAL CREAR ──
 function openModal() {
+  editandoId = null;
   document.getElementById('f-titulo').value = '';
   document.getElementById('f-descripcion').value = '';
   document.getElementById('f-fechalimite').value = '';
   document.getElementById('f-prioridad').value = '';
+  document.getElementById('f-tipo').value = 'TAREA';
   document.getElementById('form-error').style.display = 'none';
+
+  document.getElementById('ficha-titulo-modal').textContent = 'Nueva tarea';
+  document.getElementById('ficha-sub-modal').textContent = 'Completá los campos requeridos.';
+  document.getElementById('ficha-btn-submit').textContent = 'Crear tarea';
+  document.getElementById('ficha-fecha-creacion-row').style.display = 'none';
+  document.getElementById('ficha-adjuntos-section').style.display = 'none';
+  document.getElementById('ficha-side').style.display = 'none';
+
   document.getElementById('modal-add').classList.add('open');
   setTimeout(() => document.getElementById('f-titulo').focus(), 80);
+}
+
+function openModalConTipo(tipo) {
+  openModal();
+  document.getElementById('f-tipo').value = tipo;
 }
 
 function closeModal(id) {
@@ -401,7 +431,218 @@ function abrirModalEditar(id) {
   }
 
   document.getElementById('form-error').style.display = 'none';
+
+  document.getElementById('ficha-titulo-modal').textContent = 'Editar tarea';
+  document.getElementById('ficha-sub-modal').textContent = 'Modificá los datos de la tarea.';
+  document.getElementById('ficha-btn-submit').textContent = 'Guardar cambios';
+
+  const filaCreacion = document.getElementById('ficha-fecha-creacion-row');
+  if (tarea.fechaCreacion) {
+    document.getElementById('f-fecha-creacion').textContent = formatFechaHora(tarea.fechaCreacion);
+    filaCreacion.style.display = 'flex';
+  } else {
+    filaCreacion.style.display = 'none';
+  }
+
+  document.getElementById('ficha-adjuntos-section').style.display = 'block';
+  document.getElementById('ficha-side').style.display = 'flex';
+  document.getElementById('f-nuevo-comentario').value = '';
+
   document.getElementById('modal-add').classList.add('open');
+
+  cargarComentarios(id);
+  cargarAdjuntos(id);
+}
+
+// ── COMENTARIOS ──
+function getComentarioAPI(tareaId) {
+  return `${API_BASE}/tareas/${tareaId}/comentarios`;
+}
+
+function iniciales(nombre) {
+  if (!nombre) return '?';
+  return nombre.trim().split(/\s+/).slice(0, 2).map(p => p[0].toUpperCase()).join('');
+}
+
+async function cargarComentarios(tareaId) {
+  const cont = document.getElementById('ficha-comentarios-list');
+  cont.innerHTML = `<div class="ficha-empty-hint">Cargando comentarios...</div>`;
+  try {
+    const res = await authFetch(getComentarioAPI(tareaId));
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    renderComentarios(await res.json());
+  } catch (e) {
+    cont.innerHTML = `<div class="ficha-empty-hint">No se pudieron cargar los comentarios.</div>`;
+  }
+}
+
+function renderComentarios(comentarios) {
+  const cont = document.getElementById('ficha-comentarios-list');
+  if (!comentarios.length) {
+    cont.innerHTML = `<div class="ficha-empty-hint">Sin comentarios todavía.</div>`;
+    return;
+  }
+  const rol = localStorage.getItem('rol');
+  cont.innerHTML = comentarios.map(c => {
+    const puedeEliminar = c.usuarioId === usuarioActualId || rol === 'ADMIN';
+    return `
+    <div class="ficha-comentario">
+      <div class="ficha-comentario-avatar">${esc(iniciales(c.usuarioNombre))}</div>
+      <div class="ficha-comentario-body">
+        <div class="ficha-comentario-header">
+          <span class="ficha-comentario-autor">${esc(c.usuarioNombre ?? 'Usuario')}</span>
+          <span class="ficha-comentario-fecha">${formatFechaHora(c.fechaCreacion) ?? ''}</span>
+        </div>
+        <div class="ficha-comentario-texto">${esc(c.contenido)}</div>
+        ${puedeEliminar ? `<button class="ficha-comentario-delete" onclick="eliminarComentario(${c.id})">Eliminar</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function enviarComentario() {
+  if (!editandoId) return;
+  const textarea = document.getElementById('f-nuevo-comentario');
+  const contenido = textarea.value.trim();
+  if (!contenido) return;
+  try {
+    const res = await authFetch(getComentarioAPI(editandoId), {
+      method: 'POST',
+      body: JSON.stringify({ contenido })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    textarea.value = '';
+    cargarComentarios(editandoId);
+  } catch (e) {
+    showToast('Error al comentar: ' + e.message, 'error');
+  }
+}
+
+async function eliminarComentario(comentarioId) {
+  if (!editandoId) return;
+  try {
+    const res = await authFetch(`${getComentarioAPI(editandoId)}/${comentarioId}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    cargarComentarios(editandoId);
+  } catch (e) {
+    showToast('Error al eliminar comentario: ' + e.message, 'error');
+  }
+}
+
+// ── ADJUNTOS ──
+const EXTENSIONES_ADJUNTOS_PERMITIDAS = ['jpg', 'jpeg', 'png', 'docx', 'xlsx', 'pdf', 'txt'];
+
+function getAdjuntoAPI(tareaId) {
+  return `${API_BASE}/tareas/${tareaId}/adjuntos`;
+}
+
+function extensionDe(nombre) {
+  const idx = nombre.lastIndexOf('.');
+  return idx >= 0 ? nombre.substring(idx + 1) : '';
+}
+
+function formatTamanio(bytes) {
+  if (bytes == null) return '';
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+async function cargarAdjuntos(tareaId) {
+  const cont = document.getElementById('ficha-adjuntos-list');
+  cont.innerHTML = `<div class="ficha-empty-hint">Cargando adjuntos...</div>`;
+  try {
+    const res = await authFetch(getAdjuntoAPI(tareaId));
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    adjuntosActuales = await res.json();
+    renderAdjuntos(adjuntosActuales);
+  } catch (e) {
+    cont.innerHTML = `<div class="ficha-empty-hint">No se pudieron cargar los adjuntos.</div>`;
+  }
+}
+
+function renderAdjuntos(adjuntos) {
+  const cont = document.getElementById('ficha-adjuntos-list');
+  if (!adjuntos.length) {
+    cont.innerHTML = `<div class="ficha-empty-hint">Sin adjuntos todavía.</div>`;
+    return;
+  }
+  const rol = localStorage.getItem('rol');
+  cont.innerHTML = adjuntos.map(a => {
+    const puedeEliminar = a.usuarioId === usuarioActualId || rol === 'ADMIN';
+    return `
+    <div class="ficha-adjunto-item">
+      <div class="ficha-adjunto-icon">${esc(extensionDe(a.nombreOriginal).toUpperCase())}</div>
+      <div class="ficha-adjunto-info">
+        <div class="ficha-adjunto-name">${esc(a.nombreOriginal)}</div>
+        <div class="ficha-adjunto-meta">${formatTamanio(a.tamanioBytes)}${a.usuarioNombre ? ' · ' + esc(a.usuarioNombre) : ''}</div>
+      </div>
+      <div class="ficha-adjunto-actions">
+        <button class="btn btn-sm" onclick="descargarAdjunto(${a.id})" title="Descargar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </button>
+        ${puedeEliminar ? `<button class="btn btn-sm btn-danger" onclick="eliminarAdjunto(${a.id})" title="Eliminar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        </button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function subirAdjunto(event) {
+  const input = event.target;
+  const archivo = input.files[0];
+  input.value = '';
+  if (!archivo || !editandoId) return;
+
+  const extension = extensionDe(archivo.name).toLowerCase();
+  if (!EXTENSIONES_ADJUNTOS_PERMITIDAS.includes(extension)) {
+    showToast('Extensión no admitida. Usá jpg, png, docx, xlsx, pdf o txt.', 'error');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('file', archivo);
+
+  try {
+    const res = await authFetch(getAdjuntoAPI(editandoId), { method: 'POST', body: formData });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    showToast('Adjunto subido', 'success');
+    cargarAdjuntos(editandoId);
+  } catch (e) {
+    showToast('Error al subir adjunto: ' + e.message, 'error');
+  }
+}
+
+async function descargarAdjunto(adjuntoId) {
+  const adjunto = adjuntosActuales.find(a => a.id === adjuntoId);
+  if (!adjunto || !editandoId) return;
+  try {
+    const res = await authFetch(`${getAdjuntoAPI(editandoId)}/${adjuntoId}/descargar`);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = adjunto.nombreOriginal;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    showToast('Error al descargar: ' + e.message, 'error');
+  }
+}
+
+async function eliminarAdjunto(adjuntoId) {
+  if (!editandoId) return;
+  try {
+    const res = await authFetch(`${getAdjuntoAPI(editandoId)}/${adjuntoId}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    cargarAdjuntos(editandoId);
+  } catch (e) {
+    showToast('Error al eliminar adjunto: ' + e.message, 'error');
+  }
 }
 
 async function submitForm() {

@@ -20,6 +20,7 @@ public class Tarea {
     private Long id;
     private String titulo;
     private String descripcion;
+    private LocalDateTime fechaCreacion;
     private LocalDateTime fechaLimite;
     @Enumerated (EnumType.STRING)
     private Prioridad prioridad;
@@ -39,6 +40,13 @@ public class Tarea {
     @JoinColumn(name = "usuario_asignado_id")
     @JsonIgnore
     private Usuario usuarioAsignado;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.fechaCreacion == null) {
+            this.fechaCreacion = LocalDateTime.now();
+        }
+    }
 
     public void actualizarDatos(DatosActualizarTareaDTO datos){
         if (datos.titulo() != null) this.titulo = datos.titulo();

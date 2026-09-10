@@ -39,7 +39,7 @@ public class TareaController {
                 .forEach(todas::add);
 
         return ResponseEntity.ok(todas.stream().map(t -> new RetornoTareaDTO(
-                t.getId(), t.getTitulo(), t.getDescripcion(), t.getFechaLimite(),
+                t.getId(), t.getTitulo(), t.getDescripcion(), t.getFechaCreacion(), t.getFechaLimite(),
                 t.getPrioridad(), t.getEstado(), t.getTipo(),
                 t.getUsuarioAsignado() != null ? t.getUsuarioAsignado().getId() : null,
                 t.getUsuarioAsignado() != null ? t.getUsuarioAsignado().getNombre() : null
@@ -71,7 +71,7 @@ public class TareaController {
         Tarea tarea = tareaRepository.findById(tareaId).orElseThrow(() -> new EntityNotFoundException("Tarea no encontrada"));
         tarea.actualizarDatos(datos);
 
-        return ResponseEntity.ok(new RetornoTareaDTO(tarea.getId(), tarea.getTitulo(), tarea.getDescripcion(), tarea.getFechaLimite(),
+        return ResponseEntity.ok(new RetornoTareaDTO(tarea.getId(), tarea.getTitulo(), tarea.getDescripcion(), tarea.getFechaCreacion(), tarea.getFechaLimite(),
                 tarea.getPrioridad(), tarea.getEstado(), tarea.getTipo(),
                 tarea.getUsuarioAsignado() != null ? tarea.getUsuarioAsignado().getId() : null,
                 tarea.getUsuarioAsignado() != null ? tarea.getUsuarioAsignado().getNombre() : null));

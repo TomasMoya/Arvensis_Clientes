@@ -154,7 +154,7 @@ td {
 }
 
 tr:last-child td { border-bottom: none; }
-tr:hover td { background: #959e87; }
+tr:hover td { background: #3e5536; }
 
 .cell-name { display: flex; align-items: center; gap: 11px; }
 

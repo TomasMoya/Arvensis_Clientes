@@ -1,0 +1,2 @@
+ALTER TABLE tareas
+ADD COLUMN fecha_creacion DATETIME NULL;
