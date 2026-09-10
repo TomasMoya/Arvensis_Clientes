@@ -42,5 +42,6 @@ jobs:
         image: tomasmoya/arvensis_docker
         tags: latest
         registry: docker.io
+        directory: ./backend
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
