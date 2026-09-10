@@ -104,8 +104,6 @@ public class GrupoTareasController {
         GrupoTareas grupo = grupoRepository.findById(grupoId)
                 .orElseThrow(() -> new EntityNotFoundException("Grupo no encontrado"));
         Usuario usuario = (Usuario) authentication.getPrincipal();
-        Usuario asignado = usuarioRepository.findById(datos.usuarioAsignadoId())
-                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
         Tarea tarea = new Tarea();
         tarea.setTitulo(datos.titulo());
         tarea.setDescripcion(datos.descripcion());
@@ -115,7 +113,11 @@ public class GrupoTareasController {
         tarea.setTipo(datos.tipo() != null ? datos.tipo() : TipoTarea.TAREA);
         tarea.setGrupoTareas(grupo);
         tarea.setUsuario(usuario);
-        tarea.setUsuarioAsignado(asignado);
+        if (datos.usuarioAsignadoId() != null) {
+            Usuario asignado = usuarioRepository.findById(datos.usuarioAsignadoId())
+                    .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+            tarea.setUsuarioAsignado(asignado);
+        }
         tareaRepository.save(tarea);
         return ResponseEntity.status(201).build();
     }

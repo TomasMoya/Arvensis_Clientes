@@ -778,6 +778,26 @@ select { height: 40px; }
   padding: 14px 18px;
   border-bottom: 1px solid var(--border);
   background: var(--surface2);
+  cursor: pointer;
+  user-select: none;
+}
+
+.obj-chevron {
+  width: 16px; height: 16px; flex-shrink: 0;
+  color: var(--text-3);
+  transition: transform 0.15s;
+}
+
+.objetivos-group.collapsed .objetivos-header {
+  border-bottom: none;
+}
+
+.objetivos-group.collapsed .obj-chevron {
+  transform: rotate(-90deg);
+}
+
+.objetivos-group.collapsed .objetivos-list {
+  display: none;
 }
 
 .obj-dot {

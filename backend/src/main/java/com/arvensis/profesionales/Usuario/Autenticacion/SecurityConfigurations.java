@@ -37,6 +37,7 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.POST, "/login").permitAll();
                     req.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+                    req.requestMatchers("/error").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/usuarios/me").authenticated();
                     req.requestMatchers(HttpMethod.GET, "/usuarios/**").authenticated();
                     req.requestMatchers(HttpMethod.PATCH, "/usuarios/*/tareas/*").authenticated();

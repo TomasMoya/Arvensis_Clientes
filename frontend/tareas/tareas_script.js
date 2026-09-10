@@ -119,6 +119,27 @@ async function cargarTareas() {
 }
 
 // ── OBJETIVOS ──
+function toggleObjetivosGroup(groupId) {
+  const group = document.getElementById(groupId);
+  if (!group) return;
+  const collapsed = group.classList.toggle('collapsed');
+  try {
+    localStorage.setItem(`objetivos-collapsed-${groupId}`, collapsed ? '1' : '0');
+  } catch (e) {}
+}
+
+function restoreObjetivosCollapsed() {
+  ['group-trimestral', 'group-mensual', 'group-anual'].forEach(groupId => {
+    const group = document.getElementById(groupId);
+    if (!group) return;
+    let collapsed = '0';
+    try {
+      collapsed = localStorage.getItem(`objetivos-collapsed-${groupId}`) || '0';
+    } catch (e) {}
+    group.classList.toggle('collapsed', collapsed === '1');
+  });
+}
+
 function renderObjetivos() {
   ['OBJETIVO_TRIMESTRAL', 'OBJETIVO_MENSUAL', 'OBJETIVO_ANUAL'].forEach(tipo => {
     // CORRECCIÓN: Filtramos asegurando compatibilidad por si desde el backend viene como 'ANUAL' u 'OBJETIVO_ANUAL'
@@ -187,6 +208,8 @@ function renderObjetivos() {
         </div>`;
     }).join('');
   });
+
+  restoreObjetivosCollapsed();
 }
 
 async function toggleObjetivo(id) {
