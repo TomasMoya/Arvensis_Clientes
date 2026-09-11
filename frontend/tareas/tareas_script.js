@@ -141,12 +141,13 @@ function restoreObjetivosCollapsed() {
 }
 
 function renderObjetivos() {
-  ['OBJETIVO_TRIMESTRAL', 'OBJETIVO_MENSUAL', 'OBJETIVO_ANUAL'].forEach(tipo => {
+  ['OBJETIVO_TRIMESTRAL', 'OBJETIVO_MENSUAL', 'OBJETIVO_ANUAL', 'TEMA_REUNION'].forEach(tipo => {
     // CORRECCIÓN: Filtramos asegurando compatibilidad por si desde el backend viene como 'ANUAL' u 'OBJETIVO_ANUAL'
     const lista = tareas.filter(t => {
       if (tipo === 'OBJETIVO_ANUAL') return t.tipo === 'OBJETIVO_ANUAL' || t.tipo === 'ANUAL';
       if (tipo === 'OBJETIVO_TRIMESTRAL') return t.tipo === 'OBJETIVO_TRIMESTRAL' || t.tipo === 'TRIMESTRAL';
       if (tipo === 'OBJETIVO_MENSUAL') return t.tipo === 'OBJETIVO_MENSUAL' || t.tipo === 'MENSUAL';
+      if (tipo === 'TEMA_REUNION') return t.tipo === 'TEMA_REUNION' || t.tipo === 'TEMA' || t.tipo === 'REUNION';
       return t.tipo === tipo;
     });
 
@@ -156,6 +157,7 @@ function renderObjetivos() {
         'OBJETIVO_ANUAL': 'count-anual',
         'OBJETIVO_TRIMESTRAL': 'count-trimestral',
         'OBJETIVO_MENSUAL': 'count-mensual',
+        'TEMA_REUNION': 'count-tema-reunion',
     };
     
     const countId = contadores[tipo];
@@ -170,8 +172,13 @@ function renderObjetivos() {
       const periodos = {
         OBJETIVO_TRIMESTRAL: 'este trimestre',
         OBJETIVO_MENSUAL: 'este mes',
-        OBJETIVO_ANUAL: 'este año'
+        OBJETIVO_ANUAL: 'este año',
+        TEMA_REUNION: 'Aún no hay temas para reunión.'
       };
+      if (tipo === 'TEMA_REUNION') {
+        container.innerHTML = `<div class="empty-objetivos">${periodos[tipo] || ''} <button class="empty-add-link" onclick="openModalConTipo('${tipo}')">+ Agregar tema</button></div>`;
+        return;
+      }
       container.innerHTML = `<div class="empty-objetivos">Sin objetivos ${periodos[tipo] || ''} <button class="empty-add-link" onclick="openModalConTipo('${tipo}')">+ Agregar objetivo</button></div>`;
       return;
     }
@@ -540,6 +547,12 @@ async function enviarComentario() {
     showToast('Error al comentar: ' + e.message, 'error');
   }
 }
+
+document.querySelector('#f-nuevo-comentario').addEventListener("keydown", (e) => {
+  if (e.code === 'Enter') {
+    enviarComentario();
+  }
+});
 
 async function eliminarComentario(comentarioId) {
   if (!editandoId) return;

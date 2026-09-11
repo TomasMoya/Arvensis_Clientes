@@ -804,6 +804,7 @@ select { height: 40px; }
   width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
 }
 
+.dot-tema-reunion { background: rgb(209, 209, 186);}
 .dot-trimestral { background: var(--purple); }
 .dot-mensual    { background: var(--cyan); }
 .dot-anual      { background: var(--anual); }
@@ -836,6 +837,7 @@ select { height: 40px; }
   transition: border-color 0.15s;
 }
 
+#tema-reunion .objetivo-card {border-left-color: rgb(209, 209, 186) ;}
 #group-trimestral .objetivo-card { border-left-color: var(--purple); }
 #group-mensual .objetivo-card    { border-left-color: var(--cyan); }
 #group-anual .objetivo-card      { border-left-color: var(--anual); }

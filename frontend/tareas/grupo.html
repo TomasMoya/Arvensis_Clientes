@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tareas — Arvensis</title>
-  <link rel="stylesheet" href="styles_tareas.css" />
+  <link rel="stylesheet" href="styles_tareas.css?v=2" />
 </head>
 <body>
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
@@ -112,6 +112,15 @@
         </div>
 
         <div class="objetivos-section" id="objetivos-section">
+          <div class="objetivos-group" id="tema-reunion">
+            <div class="objetivos-header" onclick="toggleObjetivosGroup('tema-reunion')">
+              <span class="obj-dot dot-tema-reunion"></span>
+              <span class="obj-label">Temas a tratar en reunión</span>
+              <span class="obj-count" id="count-tema-reunion">0</span>
+              <svg class="obj-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="objetivos-list" id="list-TEMA_REUNION"></div>
+          </div>
           <div class="objetivos-group" id="group-trimestral">
             <div class="objetivos-header" onclick="toggleObjetivosGroup('group-trimestral')">
               <span class="obj-dot dot-trimestral"></span>
@@ -218,6 +227,7 @@
               <option value="OBJETIVO_MENSUAL">Objetivo Mensual</option>
               <option value="OBJETIVO_TRIMESTRAL">Objetivo Trimestral</option>
               <option value="OBJETIVO_ANUAL">Objetivo Anual</option>
+              <option value="TEMA_REUNION">Tema para Reunión</option>
             </select>
           </div>
           <div class="form-row full">

@@ -6,7 +6,7 @@ const API_BASE = isLocalhost ? 'http://127.0.0.1:8080' : '/api';
 
 // ── REDIRECT SI YA ESTÁ LOGUEADO ──
 if (localStorage.getItem('tokenJWT')) {
-  window.location.href = '../index.html';
+  window.location.href = '../selector/selector.html';
 }
 
 // ── TOGGLE PASSWORD ──
@@ -77,7 +77,7 @@ async function iniciarSesion() {
     const payload = JSON.parse(atob(data.tokenJWT.split('.')[1]));
     localStorage.setItem('rol', payload.rol);
 
-    window.location.href = '../index.html';
+    window.location.href = '../selector/selector.html';
 
   } catch (e) {
     mostrarError('No se pudo conectar al servidor.');

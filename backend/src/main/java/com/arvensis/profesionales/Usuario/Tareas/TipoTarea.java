@@ -4,5 +4,6 @@ public enum TipoTarea {
     TAREA,
     OBJETIVO_MENSUAL,
     OBJETIVO_TRIMESTRAL,
-    OBJETIVO_ANUAL
+    OBJETIVO_ANUAL,
+    TEMA_REUNION
 }
