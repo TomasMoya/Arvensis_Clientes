@@ -37,6 +37,22 @@ services:
       mysql:
         condition: service_healthy
 
+  backend-sueldos:
+    build: ./backend-sueldos
+    container_name: arvensis-backend-sueldos
+    restart: always
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/arvensis_sueldos
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      SUELDOS_LOGINS_PERMITIDOS: ${SUELDOS_LOGINS_PERMITIDOS:-facumoya}
+    env_file:
+      - .env
+    depends_on:
+      mysql:
+        condition: service_healthy
+
   frontend:
     build: ./frontend
     container_name: arvensis-frontend
@@ -48,6 +64,7 @@ services:
       - /root/ssl:/etc/ssl/arvensis
     depends_on:
       - backend
+      - backend-sueldos
 
 volumes:
   mysql_data:

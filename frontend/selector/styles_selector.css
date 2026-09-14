@@ -1,0 +1,91 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root{
+  --sel-green:#618A52;
+  --sel-green-light:#8FB97C;
+  --sel-green-dark:#33512A;
+  --sel-green-dark-alt:#3F6134;
+  --sel-green-top:#7CA86A;
+  --sel-edge:rgba(198,228,182,.45);
+  --sel-paper:#FAFCF9;
+  --sel-ink-on-green:#F0F6EC;
+  --sel-title:#F2F7F0;
+  --sel-kicker:#7E9A74;
+  --sel-radius-card:28px;
+  --sel-font-hand:'Just Another Hand',cursive;
+  --sel-font-ui:Inter,system-ui,-apple-system,sans-serif;
+}
+
+body{
+  font-family:var(--sel-font-ui);
+  background:#050705;
+}
+a{color:#9FCB8C;text-decoration:none}
+a:hover{color:#C6E4B6}
+
+.stage{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:56px;padding:72px 32px;
+  background:radial-gradient(120% 90% at 50% 45%, #10200E 0%, #060A06 55%, #030403 100%);
+}
+
+.stage-head{display:flex;flex-direction:column;align-items:center;gap:10px;margin:0;text-align:center}
+.stage-title{margin:0;font-family:var(--sel-font-hand);font-size:52px;line-height:1;font-weight:400;color:var(--sel-title);letter-spacing:.5px}
+.stage-kicker{margin:0;font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--sel-kicker)}
+
+.cards{display:flex;flex-wrap:wrap;gap:72px;justify-content:center;align-items:flex-start}
+
+.card-wrap{position:relative;padding-top:58px}
+
+.card-glow{
+  position:absolute;inset:44px 6px 6px 6px;
+  border-radius:30px;background:var(--sel-green);
+  filter:blur(34px);opacity:.5;
+  animation:sel-glow 5s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes sel-glow{0%,100%{opacity:.55}50%{opacity:.85}}
+
+.card{
+  position:relative;display:flex;flex-direction:column;align-items:center;
+  width:340px;padding:82px 34px 34px;
+  border:1px solid var(--sel-edge);border-radius:var(--sel-radius-card);
+  box-shadow:0 26px 60px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.25);
+  transition:transform .25s ease, box-shadow .25s ease;
+  color:inherit;
+}
+.card-gestion{ background:linear-gradient(165deg,#7CA86A 0%,#618A52 52%,#3F6134 100%); }
+.card-sueldos{ background:linear-gradient(165deg,#8FB97C 0%,#618A52 48%,#33512A 100%); }
+
+.card:hover,.card:focus-visible{
+  transform:translateY(-6px);
+  box-shadow:0 34px 74px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.35);
+}
+.card:focus-visible{outline:2px solid var(--sel-paper);outline-offset:4px}
+
+.card-badge{
+  position:absolute;top:-58px;left:50%;transform:translateX(-50%);
+  width:116px;height:116px;border-radius:50%;background:var(--sel-paper);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 14px 30px rgba(0,0,0,.45);
+}
+
+.card-title{font-family:var(--sel-font-hand);font-size:64px;line-height:.9;color:#fff;letter-spacing:1px}
+.card-desc{margin:14px 0 0;text-align:center;font-size:13px;line-height:1.55;color:var(--sel-ink-on-green);max-width:230px}
+.card-btn{
+  margin-top:26px;display:flex;align-items:center;justify-content:center;
+  width:190px;height:42px;border-radius:21px;background:var(--sel-paper);
+  font-size:11px;font-weight:600;letter-spacing:.22em;
+}
+.card-btn-gestion{ color:var(--sel-green-dark-alt); }
+.card-btn-sueldos{ color:var(--sel-green-dark); }
+
+@media (max-width:820px){
+  .cards{gap:96px}
+  .stage-title{font-size:44px}
+}
+@media (prefers-reduced-motion:reduce){
+  .card-glow{animation:none}
+  .card{transition:none}
+}

@@ -1,0 +1,6 @@
+CREATE TABLE documento (
+    id BIGINT NOT NULL,
+    datos_json JSON NOT NULL,
+    actualizado TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+);

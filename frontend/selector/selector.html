@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elegí una aplicación — Arvensis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Just+Another+Hand&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles_selector.css" />
+</head>
+<body>
+  <main class="stage">
+    <header class="stage-head">
+      <h1 class="stage-title">Elegí una aplicación</h1>
+      <p class="stage-kicker">Acceso interno</p>
+    </header>
+
+    <div class="cards">
+
+      <div class="card-wrap">
+        <div class="card-glow"></div>
+        <a class="card card-gestion" href="#gestion" data-app="gestion">
+          <div class="card-badge">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none" aria-hidden="true">
+              <rect x="7" y="7" width="16" height="16" rx="3" fill="#618A52"></rect>
+              <rect x="29" y="7" width="16" height="16" rx="3" fill="#618A52" opacity=".45"></rect>
+              <rect x="7" y="29" width="16" height="16" rx="3" fill="#618A52" opacity=".45"></rect>
+              <rect x="29" y="29" width="16" height="16" rx="3" fill="#618A52"></rect>
+            </svg>
+          </div>
+          <div class="card-title">Gestión</div>
+          <p class="card-desc">Arvensis clientes y gestión de tareas</p>
+          <div class="card-btn card-btn-gestion">ENTRAR</div>
+        </a>
+      </div>
+
+      <div class="card-wrap">
+        <div class="card-glow" style="animation-delay:1.4s"></div>
+        <a class="card card-sueldos" href="#sueldos" data-app="sueldos">
+          <div class="card-badge">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none" aria-hidden="true">
+              <circle cx="26" cy="26" r="19" stroke="#618A52" stroke-width="4"></circle>
+              <text x="26" y="27" text-anchor="middle" dominant-baseline="central" font-family="Inter, system-ui, sans-serif" font-size="26" font-weight="600" fill="#618A52">$</text>
+            </svg>
+          </div>
+          <div class="card-title">Sueldos</div>
+          <p class="card-desc">Liquidaciones y sueldos del mes.</p>
+          <div class="card-btn card-btn-sueldos">ENTRAR</div>
+        </a>
+      </div>
+    </div>
+  </main>
+  <script src="selector_script.js"></script>
+</body>
+</html>
