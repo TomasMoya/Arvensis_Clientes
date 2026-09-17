@@ -30,6 +30,35 @@
   --shadow-md: 0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
 }
 
+/* ─── TEMA CLARO ───
+   Basado en los roles de color de Material Design (surface/on-surface, texto de alta/
+   media/baja enfasis al 87%/60%/38%, y tonos de color mas oscuros/saturados sobre
+   fondos claros para mantener el contraste). */
+[data-theme="light"] {
+  --bg: #F4F3F0;
+  --surface: #FFFFFF;
+  --surface2: #ECEAE4;
+  --border: #DEDCD3;
+  --border2: #C9C7BB;
+  --text: #1B1B18;
+  --text-2: #5B594F;
+  --text-3: #86836F;
+  --accent: #2F5FD8;
+  --accent-bg: #E8EEFE;
+  --accent-text: #1D3FA0;
+  --green: #1E7B4D;
+  --green-bg: #E5F5EC;
+  --green-border: #BFE4D0;
+  --red: #C62828;
+  --red-bg: #FCE8E6;
+  --red-border: #F0B8B3;
+  --amber: #8A5A00;
+  --amber-bg: #FBF1DC;
+  --amber-border: #EBCF8C;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.08);
+}
+
 body {
   font-family: var(--sans);
   background: var(--bg);
@@ -556,6 +585,8 @@ tr:hover td { background: #3e5536; }
     left: -220px;
     top: 0;
     height: 100vh;
+    height: 100dvh;
+    overflow-y: auto;
     z-index: 50;
     transition: left 0.25s ease;
   }
@@ -568,7 +599,9 @@ tr:hover td { background: #3e5536; }
   }
   .sidebar-overlay.show { display: block; }
   .content { padding: 16px; }
-  .topbar { padding: 12px 16px; }
+  .topbar { padding: 12px 16px; flex-wrap: wrap; }
+  .topbar-right { width: 100%; flex-direction: column; align-items: stretch; }
+  .topbar-right .btn { width: 100%; justify-content: center; }
   #import-excel { display: none; }
   #import-excel-label { display: none; }
 }

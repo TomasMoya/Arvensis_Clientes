@@ -59,6 +59,59 @@
   --content-max: 960px;
 }
 
+/* ─── TEMA CLARO ───
+   Basado en los roles de color de Material Design (surface/on-surface, texto de alta/
+   media/baja enfasis al 87%/60%/38%, y tonos de color mas oscuros/saturados sobre
+   fondos claros para mantener el contraste). */
+[data-theme="light"] {
+  --bg: #F5F4F0;
+  --surface: #FFFFFF;
+  --surface2: #ECEBE4;
+  --border: #DEDCD2;
+  --border2: #C7C5B8;
+  --text: #1C1C18;
+  --text-2: #58564C;
+  --text-3: #83816F;
+
+  --accent: #3D6B2E;
+  --accent-bg: #EAF3E5;
+  --accent-text: #2C5020;
+  --accent-border: #C3DFB4;
+
+  --green: #3D6B2E;
+  --green-bg: #EAF3E5;
+  --green-border: #C3DFB4;
+
+  --red: #B23B32;
+  --red-bg: #FBEAE7;
+  --red-border: #EFC3BC;
+  --badge-red-bg: #FBDEDA;
+  --badge-red-text: #8C2F26;
+  --badge-red-border: #EFC0B9;
+
+  --amber: #8A5E10;
+  --amber-bg: #FBF1DC;
+  --amber-border: #EAD497;
+  --badge-amber-bg: #FBEACB;
+  --badge-amber-text: #7A5210;
+  --badge-amber-border: #EAD497;
+
+  --blue: #2F5FD8;
+  --blue-bg: #E7EEFE;
+  --blue-border: #C3D6FB;
+  --badge-blue-bg: #E1EBFC;
+  --badge-blue-text: #28459C;
+  --badge-blue-border: #C7D8F5;
+
+  --purple: #7E3FF2;
+  --cyan: #0E8FA8;
+  --anual: #B23B32;
+
+  --shadow: 0 1px 2px rgba(0,0,0,0.08);
+  --shadow-md: 0 10px 28px rgba(0,0,0,0.10);
+  --shadow-lg: 0 18px 44px rgba(0,0,0,0.12);
+}
+
 body {
   font-family: var(--sans);
   background: var(--bg);
@@ -739,6 +792,8 @@ select { height: 40px; }
     left: -224px;
     top: 0;
     height: 100vh;
+    height: 100dvh;
+    overflow-y: auto;
     z-index: 50;
     transition: left 0.25s ease;
   }
@@ -919,6 +974,20 @@ select { height: 40px; }
 
 @media (max-width: 768px) {
   .hamburger { display: flex; }
-  .card-actions { opacity: 1; }
+  .card-actions { opacity: 1; flex-wrap: wrap; }
   .objetivo-actions { opacity: 1; }
+
+  /* Tarjetas de "Temas a tratar" / objetivos: en fila entra check + titulo.
+     El badge+fecha (.objetivo-meta) baja a su propia linea de ancho completo,
+     y como .objetivo-actions vive adentro de .objetivo-meta, tambien puede
+     bajar a su propia linea si no entra junto al badge y la fecha. */
+  .objetivo-card { flex-wrap: wrap; }
+  .objetivo-meta {
+    flex-basis: 100%;
+    flex-wrap: wrap;
+    row-gap: 8px;
+    padding-left: 33px;
+    margin-top: 6px;
+  }
+  .objetivo-actions { flex-basis: 100%; }
 }

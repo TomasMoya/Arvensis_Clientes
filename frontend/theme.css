@@ -1,0 +1,41 @@
+/* ─── SELECTOR DE TEMA (claro/oscuro) — compartido por toda la app de Gestión ───
+   Usa las mismas variables (--surface, --border, --text, etc.) que ya define
+   cada página, así el botón toma automáticamente los colores de esa página. */
+
+.logo-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.logo-top .logo-mark { margin-bottom: 0; }
+
+/* En la portada (con los 3 logos) el botón va debajo del bloque, no al lado */
+.logo > .theme-toggle { margin: 10px 0 8px; }
+
+.theme-toggle {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+.theme-toggle:hover {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border2);
+}
+.theme-toggle svg { width: 17px; height: 17px; }
+
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+[data-theme="light"] .theme-toggle .icon-sun { display: block; }
+[data-theme="light"] .theme-toggle .icon-moon { display: none; }
